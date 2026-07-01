@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Silicon-Grade Branding: 6 Takeaways for Analog IC Portfolios | Jatin</title>
+    <meta name="description" content="Why treating your analog design portfolio like a hardware specification is the key to building credibility with design leads.">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,300..700;1,8..60,300..700&family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&family=EB+Garamond:ital,wght@0,400..700;1,400..700&family=Jost:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <script>
+        MathJax = {
+            tex: { inlineMath: [['\\(','\\)']], displayMath: [['\\[','\\]']], processEscapes: true },
+            options: { skipHtmlTags: ['script','noscript','style','textarea','pre','code'] }
+        };
+    </script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <style>
+        :root {
+            --paper:     #0e0e0e;
+            --paper-2:   #161616;
+            --paper-3:   #1e1e1e;
+            --line:      #2a2a2a;
+            --line-soft: #222222;
+            --ink:       #f7f2ea;
+            --ink-soft:  #c8c0b0;
+            --ink-dim:   #8a8278;
+            --ink-dimmer:#6a6258;
+            --blue:      #7ca8d4;
+            --accent:    #b8965a;
+            --green:     #5aad6a;
+            --amber:     #d4a574;
+            --red:       #d45a4a;
+            --serif:     'Source Serif 4', Georgia, serif;
+            --sans:      'Inter', system-ui, sans-serif;
+            --mono:      'JetBrains Mono', ui-monospace, monospace;
+        }
+        * { box-sizing: border-box; }
+        html, body { margin: 0; background: var(--paper); color: var(--ink); font-family: var(--sans); font-size: 15px; line-height: 1.6; -webkit-font-smoothing: antialiased; }
+        a { color: inherit; text-decoration: none; }
+
+        /* NAVBAR */
+        .navbar { position: sticky; top: 0; z-index: 100; background: var(--ink); display: flex; align-items: center; justify-content: space-between; padding: 0 32px; height: 52px; border-bottom: 2px solid var(--accent); }
+        .nav-logo { font-family: var(--mono); font-size: 14px; font-weight: 600; color: var(--paper); letter-spacing: 0.06em; }
+        .nav-logo span { color: var(--accent); }
+        .nav-links { display: flex; gap: 28px; }
+        .nav-links a { font-family: var(--mono); font-size: 11px; color: #8f9aab; letter-spacing: 0.1em; text-transform: uppercase; transition: color .15s; }
+        .nav-links a:hover, .nav-links a.active { color: var(--paper); }
+        .nav-back { font-family: var(--mono); font-size: 11px; color: var(--accent); letter-spacing: 0.1em; display: flex; align-items: center; gap: 6px; transition: opacity .15s; }
+        .nav-back:hover { opacity: 0.7; }
+
+        /* READING PROGRESS */
+        #reading-progress { position: fixed; top: 52px; left: 0; width: 0%; height: 3px; background: var(--accent); z-index: 200; transition: width .1s linear; }
+
+        /* HEADER */
+        .page-kicker { font-family: var(--mono); font-size: 11px; color: var(--accent); letter-spacing: 0.18em; font-weight: 600; margin-bottom: 14px; display: flex; align-items: center; gap: 10px; }
+        .page-kicker::before { content: ''; width: 24px; height: 2px; background: var(--accent); }
+        h1.page-title { font-family: var(--serif); font-size: 42px; font-weight: 600; line-height: 1.1; letter-spacing: -0.02em; margin: 0 0 16px; color: var(--ink); }
+        .page-subtitle { font-family: var(--serif); font-size: 18px; color: var(--ink-soft); line-height: 1.55; margin: 0 0 20px; }
+        .meta-row { display: flex; align-items: center; flex-wrap: wrap; gap: 10px; margin-bottom: 28px; }
+        .meta-chip { font-family: var(--mono); font-size: 10.5px; padding: 4px 10px; background: var(--paper-2); border: 1px solid var(--line); color: var(--ink-soft); letter-spacing: 0.04em; font-weight: 500; }
+        .meta-chip.primary { background: var(--ink); color: var(--paper); border-color: var(--ink); }
+        .page-header { margin-bottom: 2.5rem; padding-bottom: 2rem; border-bottom: 2px solid var(--ink); }
+
+        /* BODY TEXT */
+        .page-content h2 { font-family: var(--serif); font-size: 24px; font-weight: 600; letter-spacing: -0.01em; margin: 2.5rem 0 1rem; padding-bottom: 10px; border-bottom: 1px solid var(--line); color: var(--ink); }
+        .page-content h2:first-child { margin-top: 0; }
+        .page-content h3 { font-family: var(--serif); font-size: 19px; font-weight: 600; color: var(--ink); margin: 1.75rem 0 0.6rem; }
+        .page-content h4 { font-family: var(--serif); font-size: 16px; font-weight: 600; color: var(--ink); margin: 1.25rem 0 0.5rem; }
+        .page-content p { color: var(--ink-soft); line-height: 1.8; margin-bottom: 1rem; font-size: 15.5px; }
+        .page-content p strong { color: var(--ink); font-weight: 600; }
+        .page-content p em { color: var(--blue); font-style: italic; }
+        .page-content ul, .page-content ol { color: var(--ink-soft); margin: 0 0 1rem 1.4rem; }
+        .page-content li { margin-bottom: 6px; line-height: 1.7; font-size: 15px; }
+        .page-content li strong { color: var(--ink); }
+        .page-content code { background: rgba(124,168,212,0.15); padding: 0.15rem 0.45rem; font-family: var(--mono); font-size: 0.87em; color: var(--blue); }
+
+        /* MATH */
+        .math-block { background: var(--paper-2); padding: 1.1rem 1.4rem; border-left: 3px solid var(--blue); margin: 1.1rem 0; overflow-x: auto; font-size: 1.05em; }
+
+        /* INFO / INSIGHT BOX */
+        .info-box, .insight-box { margin: 1.5rem 0; border: 1px solid var(--line); border-left: 3px solid var(--accent); background: var(--paper-2); padding: 14px 16px; }
+        .info-box strong, .insight-box strong { color: var(--accent); font-weight: 700; }
+
+        /* CODE BLOCK */
+        .code-block { border: 1px solid var(--ink); margin: 1.25rem 0; background: #1a1f28; overflow: hidden; }
+        .code-block-head { display: flex; justify-content: space-between; align-items: center; padding: 8px 14px; background: #0d1219; border-bottom: 1px solid #2a3140; }
+        .code-lang-badge { font-family: var(--mono); font-size: 10px; font-weight: 700; letter-spacing: 0.14em; padding: 2px 8px; }
+        .code-lang-badge.matlab { background: #b54a2b; color: #f2ede2; }
+        .code-lang-badge.python { background: #2f6a3e; color: #f2ede2; }
+        .code-lang-badge.default { background: #3a4656; color: #d5dce8; }
+        .copy-btn { font-family: var(--mono); font-size: 10px; color: #a7b4c8; letter-spacing: 0.12em; padding: 4px 10px; background: transparent; border: 1px solid #3a4656; cursor: pointer; display: inline-flex; align-items: center; gap: 5px; transition: all .15s; }
+        .copy-btn:hover { color: var(--paper); border-color: #6a7485; }
+        .copy-btn.copied { color: #77c487; border-color: #77c487; }
+        .code-block pre { margin: 0; padding: 1.1rem 1.4rem; font-family: var(--mono); font-size: 13px; line-height: 1.7; overflow-x: auto; color: #d5dce8; white-space: pre; }
+        .code-block pre code { background: none; padding: 0; color: inherit; font-size: inherit; }
+
+        /* TABLE */
+        .page-content table { width: 100%; border-collapse: collapse; margin: 1.5rem 0; border: 1px solid var(--ink); }
+        .page-content th { text-align: left; padding: 9px 14px; background: var(--ink); color: var(--paper); font-family: var(--mono); font-size: 10px; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; }
+        .page-content td { padding: 11px 14px; border-bottom: 1px solid var(--line-soft); color: var(--ink-soft); }
+        .page-content tbody tr:nth-child(odd) { background: var(--paper-2); }
+        .page-content tbody tr:hover { background: var(--paper-3); }
+
+        /* BLOCKQUOTE */
+        .page-content blockquote { border-left: 3px solid var(--accent); padding: 1rem 1rem 1rem 1.4rem; margin: 1.5rem 0; color: var(--ink-soft); font-family: var(--serif); font-style: italic; font-size: 16.5px; background: var(--paper-2); }
+
+        /* FIGURE */
+        .content-figure { margin: 1.75rem 0; text-align: center; background: var(--paper-2); padding: 1.25rem; border: 1px solid var(--line); }
+        .content-figure img { max-width: 100%; height: auto; display: block; margin: 0 auto; }
+        .content-figure figcaption { color: var(--ink-dim); font-size: 0.87rem; margin-top: 0.7rem; font-family: var(--mono); letter-spacing: 0.04em; }
+
+        /* PROJECT ACTION BUTTONS */
+        .project-actions { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 28px; }
+        .btn-notebook { font-family: var(--mono); font-size: 11px; font-weight: 600; letter-spacing: 0.12em; padding: 8px 18px; border: 1.5px solid var(--ink); color: var(--ink); background: transparent; text-decoration: none; display: inline-flex; align-items: center; gap: 7px; transition: all .15s; }
+        .btn-notebook:hover { background: var(--ink); color: var(--paper); }
+        .btn-notebook.primary { background: var(--ink); color: var(--paper); }
+        .btn-notebook.primary:hover { background: var(--accent); border-color: var(--accent); }
+
+        /* BACK LINK */
+        .back-link { display: inline-flex; align-items: center; gap: 6px; font-family: var(--mono); font-size: 11px; color: var(--accent); letter-spacing: 0.1em; margin-bottom: 2.5rem; transition: opacity .15s; }
+        .back-link:hover { opacity: 0.7; }
+
+        /* AUTHOR */
+        .author-section { display: flex; align-items: flex-start; gap: 1.25rem; padding: 1.5rem; background: var(--paper-2); border: 1px solid var(--line); border-left: 3px solid var(--ink); margin-top: 3rem; }
+        .author-avatar { width: 48px; height: 48px; background: var(--ink); display: flex; align-items: center; justify-content: center; font-size: 1.2rem; color: var(--paper); flex-shrink: 0; }
+        .author-info h4 { font-family: var(--mono); font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase; font-weight: 600; color: var(--ink); margin: 0 0 6px; }
+        .author-info p { color: var(--ink-soft); font-size: 0.9rem; margin: 0; line-height: 1.6; }
+
+        /* SHARE */
+        .share-section { display: flex; align-items: center; gap: 1rem; margin-top: 2rem; padding-top: 1.5rem; border-top: 1px solid var(--line); flex-wrap: wrap; }
+        .share-section span { font-family: var(--mono); font-size: 11px; color: var(--ink-soft); letter-spacing: 0.1em; text-transform: uppercase; }
+        .share-btns { display: flex; gap: 0.75rem; }
+        .share-btn { width: 38px; height: 38px; border-radius: 50%; border: 1.5px solid var(--line); display: flex; align-items: center; justify-content: center; color: var(--ink-dim); font-size: 14px; transition: all 0.2s ease; text-decoration: none; }
+        .share-btn:hover { border-color: var(--accent); color: var(--accent); transform: translateY(-2px); }
+
+        /* FOOTER */
+        .page-footer { background: var(--ink); color: var(--paper); padding: 20px 32px; display: flex; justify-content: space-between; align-items: center; font-family: var(--mono); font-size: 10px; letter-spacing: 0.12em; }
+        .page-footer .c { color: #6a7485; }
+
+        /* THEME TOGGLE BUTTON */
+        .theme-toggle-btn {
+            display: none;
+        }
+
+        .page-outer { max-width: 940px; margin: 0 auto; padding: 48px 40px 80px; }
+    </style>
+</head>
+<body>
+
+<div id="reading-progress"></div>
+
+<nav class="navbar">
+    <a href="../index.html" class="nav-logo">&lt;<span>Jatin</span>/&gt;</a>
+    <div class="nav-links">
+        <a href="../index.html#home">Home</a>
+        <a href="../index.html#about">About</a>
+        <a href="../index.html#projects">Projects</a>
+        <a href="../index.html#skills">Skills</a>
+        <a href="../index.html#blog" class="active">Blog</a>
+        <a href="../index.html#contact">Contact</a>
+    </div>
+    <!-- Theme Toggle -->
+    <button id="theme-toggle" class="theme-toggle-btn" aria-label="Toggle dark mode">
+        <i class="fas fa-moon"></i>
+    </button>
+    <a href="../index.html#blog" class="nav-back"><i class="fas fa-arrow-left"></i> BLOG</a>
+</nav>
+
+<main class="page-outer">
+
+    <a href="../index.html#blog" class="back-link">
+        <i class="fas fa-arrow-left"></i> BACK TO BLOG
+    </a>
+
+    <header class="page-header">
+        <div class="page-kicker">Branding</div>
+        <h1 class="page-title">Silicon-Grade Branding: 6 Surprising Takeaways for the Modern Analog IC Design Portfolio</h1>
+        <p class="page-subtitle">Why treating your analog design portfolio like a hardware specification is the key to building credibility with design leads.</p>
+        <div class="meta-row">
+            <span class="meta-chip primary">Branding</span>
+            <span class="meta-chip"><i class="far fa-calendar" style="margin-right:5px;"></i>June 30, 2026</span>
+            <span class="meta-chip"><i class="far fa-clock" style="margin-right:5px;"></i>6 min read</span>
+            <span class="meta-chip"><i class="far fa-user" style="margin-right:5px;"></i>Jatin</span>
+        </div>
+    </header>
+
+    <div class="page-content">
+        <h2>1. Introduction: The Hardware-to-Digital Gap</h2>
+        <p>The primary challenge in an analog integrated circuit (IC) design portfolio is representing sub-micron physical precision on a two-dimensional digital screen. While typical software engineering portfolios rely on abstract, flat layouts, these formats fail to communicate the structural rigor and signal integrity required in hardware engineering.</p>
+        <p>To bridge this gap, you must architect your portfolio as a technical laboratory environment rather than a passive gallery. By treating your website's design as a hardware specification, you signal the meticulous attention to detail required for high-performance silicon. This post distills the design specifications required to turn a digital resume into a high-fidelity engineering environment.</p>
+
+        <h2>2. Takeaway 1: Your Aesthetic Should Mimic a Low-Noise Lab</h2>
+        <p>The visual framework of your portfolio must act as "metaphorical shielding," signaling to a hiring manager that you understand the environment of a high-performance laboratory. Generic web aesthetics are insufficient; your site needs to reflect the workstation of a design lead.</p>
+        <ul>
+            <li><strong>Environmental Baselines:</strong> Utilize a dark-mode baseline—charcoal or deep slate (<code>#0e0e0e</code>)—to reduce eye strain during deep technical reviews.</li>
+            <li><strong>Signaling Accents:</strong> Use high-visibility "oscilloscope green" (<code>#5aad6a</code>) or copper-gold (<code>#b8965a</code>) to guide the eye toward critical metrics and interactive areas.</li>
+            <li><strong>Typographic Rigor:</strong> Bridge the gap between data and narrative by using a clean sans-serif typeface like Inter for body text, while mandating monospaced fonts like JetBrains Mono for design equations, netlist segments, and validation data.</li>
+        </ul>
+        <p>As the industry standard suggests, your portfolio must establish a "tactile, physical connection to the viewer," ensuring the digital presentation reflects the physical nature of silicon design.</p>
+
+        <h2>3. Takeaway 2: Mandate "Physical Intuition" Over SPICE Automation</h2>
+        <p>A common pitfall in junior portfolios is an over-reliance on automated SPICE sweeps. In high-stakes analog design, a "button-pusher" is a liability. Strategic portfolios must prioritize "physical intuition"—the ability to derive circuit behavior before a single simulation is run.</p>
+        <p>Hiring managers demand hand-calculated small-signal derivations and thermal boundary analyses. This demonstrates an analytical mindset capable of establishing robust starting designs. Your documentation should include transistor-level open-loop gain derivations such as:</p>
+        <div class="math-block">\[ A_{v0} \approx g_{m1} (r_{o2} \parallel r_{o4}) \]</div>
+        <p>This level of detail confirms that you are balancing device-level physics with practical layout constraints. As stated in our core methodology:</p>
+        <blockquote>
+            "Engineering high-performance analog systems requires balancing device-level physics with practical layout constraints. My methodology prioritizes hand-calculated small-signal derivations and thermal boundary analyses to establish robust starting designs, using SPICE optimization only to refine layout-parasitic trade-offs."
+        </blockquote>
+
+        <h2>4. Takeaway 3: Architect for Two Opposing Personas</h2>
+        <p>An elite portfolio must satisfy two distinct audiences through structural design solutions. You cannot optimize for one without neglecting the other.</p>
+        <ul>
+            <li><strong>The Technical Recruiter (The Keyword Hunter):</strong>
+                <ul>
+                    <li><em>Goal:</em> Immediate validation of skills and technology nodes.</li>
+                    <li><em>Solution:</em> Use "Parametric Callouts" on project cards (e.g., TSMC 180nm BCD | Cadence Virtuoso | LDO | 33dB Gain | Tapeout Proven).</li>
+                </ul>
+            </li>
+            <li><strong>The Analog Design Lead (The Rigor Evaluator):</strong>
+                <ul>
+                    <li><em>Goal:</em> Evaluating design-flow integrity, stability, and parasitic management.</li>
+                    <li><em>Solution:</em> High-depth case studies featuring Spectre transient responses, Synopsys Custom Compiler schematics, and Siemens Calibre LVS/DRC sign-off reports.</li>
+                </ul>
+            </li>
+        </ul>
+        <p>By utilizing "bento-box" layouts, you can provide the high-level summaries recruiters need while burying the heavy mathematical modeling in deep-dive sections for engineering leads.</p>
+
+        <h2>5. Takeaway 4: Engineer "Playable" Circuitry</h2>
+        <p>Static screenshots are the hallmark of a passive engineer. To truly demonstrate capability, you must integrate "playable" elements. Incorporating browser-based Javascript simulators allows a Design Lead to directly engage with your technical competence.</p>
+        <p>For instance, a simulator for a Low-Dropout (LDO) regulator or a differential amplifier should allow a user to modify bias currents or passive values in real-time. This is not a gimmick; it is a verification tool that allows the reviewer to see AC frequency responses plotting dynamically on vector charts. This interactive engagement proves you understand the sensitivity of your design far more effectively than a static waveform capture.</p>
+
+        <h2>6. Takeaway 5: Abstract NDAs and Prioritize Quality Over Quantity</h2>
+        <p>Do not allow Non-Disclosure Agreements to result in a blank project list. Professional trust is built by abstracting proprietary work, not by hiding it. You can demonstrate your problem-solving process by:</p>
+        <ul>
+            <li>Removing specific component labels and proprietary netlist names.</li>
+            <li>Scaling and normalizing axis parameters on simulation plots.</li>
+            <li>Utilizing generic block diagrams to discuss high-level architecture.</li>
+        </ul>
+        <div class="info-box">
+            <strong>The "Quality Over Quantity" Mandate:</strong> A Silicon-Grade portfolio should focus on three to five highly detailed, complete designs rather than dozens of academic exercise blocks. One well-documented project—tracing a design from schematic entry through post-layout PEX and physical measurement—carries more weight than a hundred simple op-amp simulations.
+        </div>
+
+        <h2>7. Takeaway 6: Verification is the True "Hero" of the Case Study</h2>
+        <p>In the world of "silicon-proven" design, the schematic is merely the hypothesis; verification is the proof. A comprehensive case study must focus on the following pillars:</p>
+        <ul>
+            <li><strong>Analytical Modeling:</strong> Include Miller compensation derivations to prove stability across load variations:
+                <div class="math-block">\[ \omega_{p1} \approx \frac{1}{R_1 C_c A_{v2}}, \quad \omega_{p2} \approx \frac{g_{m2}}{C_L} \]</div>
+            </li>
+            <li><strong>PDK Specificity:</strong> Reference specific technology nodes like 130nm CMOS (IHP SG13G2) or 180nm BCD.</li>
+            <li><strong>Noise Optimization:</strong> Show you can manage thermal and flicker noise limits:
+                <div class="math-block">\[ \overline{v_n^2} = 4kTR\Delta f \quad \text{and} \quad \overline{v_{flicker}^2} = \frac{K_F}{C_{ox} W L f} \]</div>
+            </li>
+            <li><strong>Physical Layout Engineering:</strong> Highlight matching strategies such as common-centroid configurations and guard ring isolation to prevent latch-up.</li>
+            <li><strong>Post-Layout Sign-off:</strong> Showcase Parasitic Extraction (PEX) results and present measured bench data from oscilloscopes or spectrum analyzers alongside simulated results to prove your design survives the transition to physical silicon.</li>
+        </ul>
+
+        <h2>Conclusion: Beyond the Static Resume</h2>
+        <p>The modern analog IC design portfolio is a shift from a passive resume to an active, engineering-grade environment. By prioritizing physical intuition, dual-persona optimization, and rigorous mathematical verification, you transform a simple website into a powerful professional credential.</p>
+        <p>As you evaluate your current presentation, ask yourself: Does your portfolio reflect the sub-micron precision of your actual silicon work, or is it a high-noise environment?</p>
+    </div>
+
+    <div class="project-actions" style="margin-top: 3rem; justify-content: center;">
+        <a href="../index.html#blog" class="btn-notebook"><i class="fas fa-arrow-left"></i> BACK TO ALL POSTS</a>
+    </div>
+
+</main>
+
+<footer class="page-footer">
+    <span>&copy; 2026 Jatin</span>
+    <span class="c">Analog Circuit Design</span>
+</footer>
+
+<script>
+    window.addEventListener('scroll', () => {
+        const el = document.getElementById('reading-progress');
+        if (!el) return;
+        const h = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+        el.style.width = (h > 0 ? (window.pageYOffset / h) * 100 : 0) + '%';
+    });
+</script>
+</body>
+</html>

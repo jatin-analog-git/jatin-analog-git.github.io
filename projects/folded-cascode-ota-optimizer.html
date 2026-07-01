@@ -1,0 +1,588 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Folded Cascode OTA Optimizer | Jatin</title>
+    <meta name="description" content="Automated sizing tool for folded cascode OTAs using the gm/ID methodology. 180nm TSMC.">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,300..700;1,8..60,300..700&family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&family=EB+Garamond:ital,wght@0,400..700;1,400..700&family=Jost:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <script>
+        MathJax = {
+            tex: { inlineMath: [['\\(','\\)']], displayMath: [['\\[','\\]']], processEscapes: true },
+            options: { skipHtmlTags: ['script','noscript','style','textarea','pre','code'] }
+        };
+    </script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+    <style>
+        :root {
+            --paper:     #0e0e0e;
+            --paper-2:   #161616;
+            --paper-3:   #1e1e1e;
+            --line:      #2a2a2a;
+            --line-soft: #222222;
+            --ink:       #f7f2ea;
+            --ink-soft:  #c8c0b0;
+            --ink-dim:   #8a8278;
+            --ink-dimmer:#6a6258;
+            --blue:      #7ca8d4;
+            --accent:    #b8965a;
+            --green:     #5aad6a;
+            --amber:     #d4a574;
+            --red:       #d45a4a;
+            --serif:     'Source Serif 4', Georgia, serif;
+            --sans:      'Inter', system-ui, sans-serif;
+            --mono:      'JetBrains Mono', ui-monospace, monospace;
+        }
+        * { box-sizing: border-box; }
+        html, body { margin: 0; background: var(--paper); color: var(--ink); font-family: var(--sans); font-size: 15px; line-height: 1.6; -webkit-font-smoothing: antialiased; }
+        a { color: inherit; text-decoration: none; }
+
+        /* ── NAVBAR ── */
+        .navbar {
+            position: sticky; top: 0; z-index: 100;
+            background: var(--ink);
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 0 32px; height: 52px;
+            border-bottom: 2px solid var(--accent);
+        }
+        .nav-logo { font-family: var(--mono); font-size: 14px; font-weight: 600; color: var(--paper); letter-spacing: 0.06em; }
+        .nav-logo span { color: var(--accent); }
+        .nav-links { display: flex; gap: 28px; }
+        .nav-links a { font-family: var(--mono); font-size: 11px; color: #8f9aab; letter-spacing: 0.1em; text-transform: uppercase; transition: color .15s; }
+        .nav-links a:hover, .nav-links a.active { color: var(--paper); }
+        .nav-back { font-family: var(--mono); font-size: 11px; color: var(--accent); letter-spacing: 0.1em; display: flex; align-items: center; gap: 6px; transition: opacity .15s; }
+        .nav-back:hover { opacity: 0.7; }
+
+        /* ── PAGE LAYOUT ── */
+        .page-outer { display: grid; grid-template-columns: 200px minmax(0,1fr); max-width: 1140px; margin: 0 auto; }
+
+        /* ── SIDEBAR TOC ── */
+        .toc-sidebar {
+            position: sticky; top: 52px; align-self: start;
+            height: calc(100vh - 52px);
+            border-right: 1px solid var(--line);
+            background: var(--paper-2);
+            padding: 32px 20px;
+            overflow-y: auto;
+            font-size: 13px;
+        }
+        .toc-sidebar h4 { font-family: var(--mono); font-size: 10px; letter-spacing: 0.18em; color: var(--ink-dim); font-weight: 600; margin: 0 0 10px; text-transform: uppercase; }
+        .toc-list { list-style: none; padding: 0; margin: 0 0 24px; }
+        .toc-list li + li { margin-top: 1px; }
+        .toc-list a {
+            display: grid; grid-template-columns: 24px 1fr;
+            padding: 6px 8px;
+            color: var(--ink-soft); font-weight: 500; font-size: 12.5px;
+            border-left: 2px solid transparent;
+            transition: all .12s;
+        }
+        .toc-list a:hover { background: var(--paper-3); color: var(--ink); }
+        .toc-list a.active { background: var(--paper); border-left-color: var(--accent); color: var(--ink); }
+        .toc-list .num { font-family: var(--mono); font-size: 10px; color: var(--ink-soft); font-weight: 600; }
+        .toc-list a.active .num { color: var(--accent); font-weight: 600; }
+        .toc-meta { padding-top: 20px; border-top: 1px solid var(--line); font-family: var(--mono); font-size: 10px; color: var(--ink-dim); }
+        .toc-meta .row { display: flex; flex-direction: column; padding: 5px 0; border-bottom: 1px solid var(--line-soft); gap: 2px; }
+        .toc-meta .row:last-child { border-bottom: none; }
+        .toc-meta .row span { font-size: 9px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--ink-soft); }
+        .toc-meta b { color: var(--ink); font-weight: 600; font-size: 11px; word-break: break-word; }
+        .toc-badge { margin-top: 12px; display: inline-flex; align-items: center; gap: 5px; padding: 4px 9px; background: rgba(47,106,62,0.1); border: 1px solid var(--green); color: var(--green); font-size: 9.5px; font-weight: 600; letter-spacing: 0.1em; }
+        .toc-badge .dot { width: 6px; height: 6px; background: var(--green); border-radius: 50%; }
+
+        .page-wrap { padding: 48px 40px 80px; }
+
+        /* ── HEADER ── */
+        .project-header { margin-bottom: 2.5rem; padding-bottom: 2rem; border-bottom: 2px solid var(--ink); }
+        .header-kicker { font-family: var(--mono); font-size: 11px; color: var(--accent); letter-spacing: 0.18em; font-weight: 600; margin-bottom: 14px; display: flex; align-items: center; gap: 10px; }
+        .header-kicker::before { content: ''; width: 24px; height: 2px; background: var(--accent); }
+        h1.project-title { font-family: var(--serif); font-size: 48px; font-weight: 600; line-height: 1.05; letter-spacing: -0.02em; margin: 0 0 16px; color: var(--ink); }
+        h1.project-title em { font-style: italic; color: var(--blue); font-weight: 500; }
+        .project-sub { font-family: var(--serif); font-size: 18px; color: var(--ink-soft); line-height: 1.55; margin: 0 0 20px; }
+        .project-sub strong { color: var(--ink); font-weight: 600; }
+
+        .project-meta-row { display: flex; align-items: center; flex-wrap: wrap; gap: 10px; margin-bottom: 20px; }
+        .meta-chip { font-family: var(--mono); font-size: 10.5px; padding: 4px 10px; background: var(--paper-2); border: 1px solid var(--line); color: var(--ink-soft); letter-spacing: 0.04em; font-weight: 500; }
+        .meta-chip.primary { background: var(--ink); color: var(--paper); border-color: var(--ink); }
+        .meta-chip.node { background: var(--paper-2); border-color: var(--blue); color: var(--blue); font-weight: 600; }
+
+        .project-actions { display: flex; gap: 10px; flex-wrap: wrap; }
+        .btn-notebook {
+            font-family: var(--mono); font-size: 11px; font-weight: 600; letter-spacing: 0.12em;
+            padding: 8px 18px; border: 1.5px solid var(--ink); color: var(--ink);
+            background: transparent; text-decoration: none; display: inline-flex; align-items: center; gap: 7px;
+            transition: all .15s; cursor: pointer;
+        }
+        .btn-notebook:hover { background: var(--ink); color: var(--paper); }
+        .btn-notebook.primary { background: var(--ink); color: var(--paper); }
+        .btn-notebook.primary:hover { background: var(--accent); border-color: var(--accent); }
+
+        /* ── SECTION HEADING ── */
+        .section-heading { display: flex; align-items: baseline; gap: 14px; margin: 2.75rem 0 1.1rem; padding-bottom: 10px; border-bottom: 1px solid var(--ink); }
+        .section-num { font-family: var(--mono); font-size: 11px; color: var(--paper); background: var(--ink); padding: 2px 8px; letter-spacing: 0.16em; font-weight: 600; flex-shrink: 0; }
+        .section-heading h2 { font-family: var(--serif); font-size: 24px; font-weight: 600; letter-spacing: -0.01em; margin: 0; color: var(--ink); }
+        .section-heading h2 em { font-style: italic; color: var(--blue); font-weight: 500; }
+        .section-tag { margin-left: auto; font-family: var(--mono); font-size: 10.5px; color: var(--ink); letter-spacing: 0.08em; white-space: nowrap; }
+
+        /* ── BODY TEXT ── */
+        .project-content h3 { font-family: var(--serif); font-size: 19px; font-weight: 600; color: var(--ink); margin: 1.75rem 0 0.6rem; }
+        .project-content p { color: var(--ink-soft); line-height: 1.8; margin-bottom: 1rem; font-size: 15.5px; }
+        .project-content p strong { color: var(--ink); font-weight: 600; }
+        .project-content p em { color: var(--blue); font-style: italic; }
+        .project-content ul, .project-content ol { color: var(--ink-soft); margin: 0 0 1rem 1.4rem; }
+        .project-content li { margin-bottom: 6px; line-height: 1.7; font-size: 15px; }
+        .project-content li strong { color: var(--ink); }
+        .project-content code { background: rgba(14,42,74,0.1); padding: 0.15rem 0.45rem; font-family: var(--mono); font-size: 0.87em; color: var(--blue); }
+
+        /* ── MATH BLOCK ── */
+        .math-block { background: var(--paper-2); padding: 1.1rem 1.4rem; border-left: 3px solid var(--blue); margin: 1.1rem 0; overflow-x: auto; font-size: 1.05em; }
+
+        /* ── INSIGHT BOX ── */
+        .insight-box { margin: 1.5rem 0; border: 1px solid var(--line); border-left: 3px solid var(--accent); background: var(--paper-2); }
+        .insight-hd { display: flex; align-items: center; gap: 8px; padding: 7px 14px; border-bottom: 1px solid var(--line); font-family: var(--mono); font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--ink); font-weight: 600; }
+        .insight-hd .dot { width: 7px; height: 7px; background: var(--accent); flex-shrink: 0; }
+        .insight-hd .tag { margin-left: auto; color: var(--ink-dim); font-weight: 500; }
+        .insight-bd { display: flex; gap: 14px; padding: 14px 16px; }
+        .insight-ic { width: 34px; height: 34px; background: var(--paper); border: 1px solid var(--accent); display: grid; place-items: center; color: var(--accent); font-size: 15px; flex-shrink: 0; margin-top: 2px; }
+        .insight-t { font-family: var(--serif); font-size: 15.5px; line-height: 1.65; color: var(--ink); width: 100%; }
+        .insight-t strong { color: var(--accent); font-weight: 700; }
+        .insight-t em { color: var(--blue); font-style: italic; }
+
+        /* ── SPEC TABLE ── */
+        .spec-table-wrap { border: 1px solid var(--ink); overflow: hidden; margin: 1.25rem 0; }
+        .spec-table { width: 100%; border-collapse: collapse; font-size: 14px; }
+        .spec-table thead th { text-align: left; padding: 9px 14px; background: var(--ink); color: var(--paper); font-family: var(--mono); font-size: 10px; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; }
+        .spec-table td { padding: 11px 14px; border-bottom: 1px solid var(--line-soft); color: var(--ink-soft); }
+        .spec-table tbody tr:last-child td { border-bottom: none; }
+        .spec-table tbody tr:nth-child(odd) { background: var(--paper-2); }
+        .spec-table tbody tr:hover { background: var(--paper-3); }
+        .spec-table .param { color: var(--ink); font-weight: 600; }
+        .spec-table .num { font-family: var(--mono); font-size: 13px; color: var(--ink); font-variant-numeric: tabular-nums; }
+        .status { display: inline-flex; align-items: center; gap: 5px; font-family: var(--mono); font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase; font-weight: 600; padding: 2px 8px; }
+        .status::before { content: ''; width: 5px; height: 5px; border-radius: 50%; background: currentColor; }
+        .status.pass { color: var(--green); background: rgba(47,106,62,0.1); }
+        .status.warn { color: var(--amber); background: rgba(140,107,26,0.1); }
+        .status.fail { color: var(--red); background: rgba(168,50,30,0.1); }
+
+        /* ── CODE BLOCK ── */
+        .code-block { border: 1px solid var(--ink); margin: 1.25rem 0; background: #1a1f28; overflow: hidden; }
+        .code-block-head { display: flex; justify-content: space-between; align-items: center; padding: 8px 14px; background: #0d1219; border-bottom: 1px solid #2a3140; }
+        .code-lang-badge { font-family: var(--mono); font-size: 10px; font-weight: 700; letter-spacing: 0.14em; padding: 2px 8px; }
+        .code-lang-badge.matlab { background: #b54a2b; color: #f2ede2; }
+        .code-lang-badge.python { background: #2f6a3e; color: #f2ede2; }
+        .code-file { font-family: var(--mono); font-size: 11px; color: #a7b4c8; margin-left: 10px; }
+        .copy-btn { font-family: var(--mono); font-size: 10px; color: #a7b4c8; letter-spacing: 0.12em; padding: 4px 10px; background: transparent; border: 1px solid #3a4656; cursor: pointer; display: inline-flex; align-items: center; gap: 5px; transition: all .15s; }
+        .copy-btn:hover { color: var(--paper); border-color: #6a7485; }
+        .copy-btn.copied { color: #77c487; border-color: #77c487; }
+        .code-block pre { margin: 0; padding: 1.1rem 1.4rem; font-family: var(--mono); font-size: 13px; line-height: 1.7; overflow-x: auto; color: #d5dce8; white-space: pre; }
+        .code-block pre code { background: none; padding: 0; color: inherit; font-size: inherit; }
+
+        /* ── KV TABLE ── */
+        .kv { border: 1px solid var(--line); background: var(--paper); font-size: 13px; margin: 1rem 0; }
+        .kv .row { display: grid; grid-template-columns: 1fr auto; padding: 8px 14px; border-bottom: 1px solid var(--line-soft); }
+        .kv .row:last-child { border-bottom: none; }
+        .kv .row.head { background: var(--ink); color: var(--paper); font-family: var(--mono); font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase; font-weight: 600; }
+        .kv .k { color: var(--ink-soft); font-weight: 500; }
+        .kv .v { font-family: var(--mono); font-size: 12px; color: var(--ink); font-variant-numeric: tabular-nums; font-weight: 500; }
+
+        /* ── SHARE SECTION ── */
+        .share-section { display: flex; align-items: center; gap: 1rem; margin-top: 3rem; padding-top: 1.5rem; border-top: 1px solid var(--line); flex-wrap: wrap; }
+        .share-section span { font-family: var(--mono); font-size: 11px; color: var(--ink-dim); letter-spacing: 0.1em; text-transform: uppercase; }
+        .share-btns { display: flex; gap: 0.75rem; }
+        .share-btn { width: 38px; height: 38px; border-radius: 50%; border: 1.5px solid var(--line); display: flex; align-items: center; justify-content: center; color: var(--ink-dim); font-size: 14px; transition: all 0.2s ease; text-decoration: none; }
+        .share-btn:hover { border-color: var(--accent); color: var(--accent); transform: translateY(-2px); }
+
+        /* ── FIGURE ── */
+        .content-figure { margin: 1.75rem 0; text-align: center; background: var(--paper-2); padding: 1.25rem; border: 1px solid var(--line); }
+        .content-figure img { max-width: 100%; height: auto; display: block; margin: 0 auto; }
+        .content-figure figcaption { color: var(--ink-dim); font-size: 0.87rem; margin-top: 0.7rem; font-family: var(--mono); letter-spacing: 0.04em; }
+
+        /* gm/ID calculator — retheme to match notebook */
+        #gmid-calc-root { margin: 1.5rem 0; }
+        #gmid-calc-root .gmid-calculator,
+        #gmid-calc-root [class*="calculator"] { background: var(--paper-2) !important; border: 1px solid var(--line) !important; border-radius: 0 !important; color: var(--ink) !important; }
+        #gmid-calc-root input[type=range] { accent-color: var(--accent); }
+        #gmid-calc-root label, #gmid-calc-root p, #gmid-calc-root span, #gmid-calc-root div { color: var(--ink-soft) !important; font-family: var(--sans) !important; }
+        #gmid-calc-root .calc-value, #gmid-calc-root [class*="value"], #gmid-calc-root [class*="result"] { color: var(--ink) !important; font-family: var(--mono) !important; }
+        #gmid-calc-root canvas { filter: hue-rotate(160deg) saturate(0.7) brightness(0.8); }
+
+        /* ── PRINT / PDF ── */
+        @media print {
+            .navbar, .toc-sidebar, .share-section, .page-footer { display: none !important; }
+            .page-outer { display: block !important; }
+            .page-wrap { padding: 24px !important; }
+            .code-block { border: 1px solid #ccc !important; background: #f8f8f8 !important; }
+            .code-block pre { color: #333 !important; }
+            body { background: white !important; }
+        }
+
+        /* ── FOOTER ── */
+        .page-footer { background: var(--ink); color: var(--paper); padding: 20px 32px; display: flex; justify-content: space-between; align-items: center; font-family: var(--mono); font-size: 10px; letter-spacing: 0.12em; margin-top: 0; }
+        .page-footer .c { color: #6a7485; }
+
+        /* THEME TOGGLE BUTTON */
+        .theme-toggle-btn {
+            display: none;
+        }
+
+        /* DARK THEME OVERRIDES */
+        body.dark-theme {
+            --paper:     #0e0e0e;
+            --paper-2:   #161616;
+            --paper-3:   #1e1e1e;
+            --line:      #2a2a2a;
+            --line-soft: #222222;
+            --ink:       #f7f2ea;
+            --ink-soft:  #c8c0b0;
+            --ink-dim:   #8a8278;
+            --ink-dimmer:#6a6258;
+            --blue:      #7ca8d4;
+            --accent:    #b8965a;
+            --green:     #5aad6a;
+            --amber:     #d4a574;
+            --red:       #d45a4a;
+        }
+        body.dark-theme .navbar { background: #0a0a0a; border-bottom-color: var(--accent); }
+        body.dark-theme .toc-card,
+        body.dark-theme .insight-box,
+        body.dark-theme .content-figure { background: var(--paper-2); border-color: var(--line); }
+        body.dark-theme .toc-card a.active { color: var(--accent); }
+    </style>
+</head>
+<body>
+<script>
+    if (localStorage.getItem('jatin-theme-pref') === 'dark') {
+        document.body.classList.add('dark-theme');
+    }
+</script>
+
+<!-- NAVBAR -->
+<nav class="navbar">
+    <a href="../index.html" class="nav-logo">&lt;<span>Jatin</span>/&gt;</a>
+    <div class="nav-links">
+        <a href="../index.html#about">About</a>
+        <a href="../index.html#projects" class="active">Projects</a>
+        <a href="../index.html#skills">Skills</a>
+        <a href="../index.html#blog">Blog</a>
+        <a href="../index.html#contact">Contact</a>
+    </div>
+    <!-- Theme Toggle -->
+    <button id="theme-toggle" class="theme-toggle-btn" aria-label="Toggle dark mode">
+        <i class="fas fa-moon"></i>
+    </button>
+    <a href="../index.html#projects" class="nav-back">
+        <i class="fas fa-arrow-left" style="font-size:10px;"></i> All Projects
+    </a>
+</nav>
+
+<div class="page-outer">
+
+<!-- ── TOC SIDEBAR ── -->
+<nav class="toc-sidebar">
+    <h4>Contents</h4>
+    <ul class="toc-list" id="toc">
+        <li><a href="#sec-overview"><span class="num">01</span>Overview</a></li>
+        <li><a href="#sec-topology"><span class="num">02</span>Topology & Sizing</a></li>
+        <li><a href="#sec-specs"><span class="num">03</span>Target vs. Achieved</a></li>
+        <li><a href="#sec-methodology"><span class="num">04</span>gm/ID Method</a></li>
+        <li><a href="#sec-code"><span class="num">05</span>Optimizer Code</a></li>
+        <li><a href="#sec-calculator"><span class="num">06</span>Interactive Tool</a></li>
+    </ul>
+    <div class="toc-meta">
+        <div class="row"><span>Process</span><b>TSMC 180nm</b></div>
+        <div class="row"><span>Tools</span><b>MATLAB · Spectre · HSPICE · PYTHON · MikeTex </b></div>
+        <div class="row"><span>Duration</span><b>6 months</b></div>
+        <div class="row"><span>Published</span><b>Jan 2026</b></div>
+    </div>
+</nav>
+
+<div class="page-wrap">
+
+    <!-- HEADER -->
+    <header class="project-header">
+        <div class="header-kicker">Analog Design · OTA-OPT-0042</div>
+        <h1 class="project-title">Folded Cascode OTA <em>Optimizer</em></h1>
+        <p class="project-sub">An automated <strong>MATLAB sizing tool</strong> for folded cascode operational transconductance amplifiers using the gm/I<sub>D</sub> methodology — sweeping inversion coefficients against TSMC 180 nm lookup tables to find the Pareto front of gain-bandwidth, power, and area.</p>
+
+    </header>
+
+    <div class="project-content">
+
+        <!-- § 01 Overview -->
+        <div class="section-heading" id="sec-overview">
+            <span class="section-num">§ 01</span>
+            <h2>Overview</h2>
+            <span class="section-tag">Motivation · Approach</span>
+        </div>
+
+        <p>This project presents an automated sizing tool for folded cascode operational transconductance amplifiers (OTAs) using the gm/I<sub>D</sub> design methodology. The tool enables rapid design space exploration and achieves optimal gain-bandwidth tradeoffs through systematic optimization of four key sizing knobs.</p>
+
+        <div class="insight-box">
+            <div class="insight-hd"><span class="dot"></span><span>Design Decision · Topology</span><span class="tag">№ 01</span></div>
+            <div class="insight-bd">
+                <div class="insight-ic"><i class="fas fa-brain"></i></div>
+                <div class="insight-t">
+                    <strong>Why folded cascode?</strong> A single-stage OTA at 1.8 V supply cannot simultaneously meet &gt;60 dB gain and &gt;100 MHz GBW with reasonable power. The folded cascode topology decouples the input g<sub>m</sub> stage from the output node, allowing both an NMOS input pair (low noise) and high output resistance — without stacking transistors beyond the headroom budget.
+                </div>
+            </div>
+        </div>
+
+        <!-- § 02 Topology & Sizing -->
+        <div class="section-heading" id="sec-topology">
+            <span class="section-num">§ 02</span>
+            <h2>Topology & <em>Sizing</em></h2>
+            <span class="section-tag">8 devices · 4 degrees of freedom</span>
+        </div>
+
+        <p>The optimizer reduces the sizing problem to four independent knobs: (1) input-pair gm/I<sub>D</sub>, (2) cascode gm/I<sub>D</sub>, (3) branch current ratio κ = I<sub>casc</sub>/I<sub>tail</sub>, and (4) input-pair channel length. Everything else — widths, bias voltages, output-stage sizing — falls out analytically from the lookup tables.</p>
+
+        <figure class="content-figure">
+            <img src="../images/projects/cmos_inverter.png" alt="Folded Cascode OTA — 8-transistor single-stage topology" class="project-image">
+            <figcaption>FIG. 1 · Folded Cascode OTA — 8-transistor single-stage topology (TSMC 180nm)</figcaption>
+        </figure>
+
+        <div class="insight-box">
+            <div class="insight-hd"><span class="dot"></span><span>Design Decision · Sizing</span><span class="tag">№ 02</span></div>
+            <div class="insight-bd">
+                <div class="insight-ic"><i class="fas fa-sliders-h"></i></div>
+                <div class="insight-t">
+                    Picking <strong>L = 0.5 µm</strong> for the input pair (vs. minimum 0.18 µm) triples the intrinsic gain with only an ~8% hit to f<sub>T</sub>. For a single-stage topology, that gain directly buys DC loop gain — <em>it's the cheapest dB you'll ever spend</em>.
+                </div>
+            </div>
+        </div>
+
+        <h3>Key Design Equations</h3>
+
+        <p>The transconductance of a MOSFET in saturation:</p>
+        <div class="math-block">\[g_m = \frac{2I_D}{V_{GS} - V_{TH}} = \sqrt{2\mu_n C_{ox} \frac{W}{L} I_D}\]</div>
+
+        <p>DC gain of the folded cascode OTA:</p>
+        <div class="math-block">\[A_v = g_{m1} \cdot (r_{o,\text{casc},n} \parallel r_{o,\text{casc},p})\]</div>
+
+        <p>Cascode output resistance:</p>
+        <div class="math-block">\[r_{o,\text{cascode}} \approx g_m r_o^2\]</div>
+
+        <!-- § 03 Target vs Achieved -->
+        <div class="section-heading" id="sec-specs">
+            <span class="section-num">§ 03</span>
+            <h2>Target vs. <em>Achieved</em></h2>
+            <span class="section-tag">Post-layout · TT · 27 °C</span>
+        </div>
+
+        <p>All values below are post-layout with parasitics extracted, typical corner at 27 °C.</p>
+
+        <div class="spec-table-wrap">
+            <table class="spec-table">
+                <thead>
+                    <tr><th>Parameter</th><th>Target</th><th>Achieved</th><th>Margin</th><th>Status</th><th>Condition</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td class="param">DC Gain A<sub>v0</sub></td><td>&gt; 60 dB</td><td class="num">72 dB</td><td>+12 dB</td><td><span class="status pass">Pass</span></td><td>V<sub>out</sub> = 0.9 V</td></tr>
+                    <tr><td class="param">GBW ƒ<sub>u</sub></td><td>&gt; 100 MHz</td><td class="num">110 MHz</td><td>+10%</td><td><span class="status pass">Pass</span></td><td>C<sub>L</sub> = 2 pF</td></tr>
+                    <tr><td class="param">Phase Margin φ<sub>m</sub></td><td>&gt; 60°</td><td class="num">67°</td><td>+7°</td><td><span class="status pass">Pass</span></td><td>Unity-gain</td></tr>
+                    <tr><td class="param">Power P<sub>tot</sub></td><td>&lt; 1 mW</td><td class="num">0.82 mW</td><td>−18%</td><td><span class="status pass">Pass</span></td><td>V<sub>DD</sub> = 1.8 V</td></tr>
+                    <tr><td class="param">Slew Rate SR</td><td>&gt; 80 V/µs</td><td class="num">94 V/µs</td><td>+17.5%</td><td><span class="status pass">Pass</span></td><td>Step = 1 V</td></tr>
+                    <tr><td class="param">Input-ref. Noise v<sub>n,in</sub></td><td>&lt; 8 nV/√Hz</td><td class="num">6.4 nV/√Hz</td><td>−20%</td><td><span class="status pass">Pass</span></td><td>f = 1 MHz</td></tr>
+                    <tr><td class="param">Offset (3σ) V<sub>os</sub></td><td>&lt; 5 mV</td><td class="num">5.8 mV</td><td>+16%</td><td><span class="status fail">Fail</span></td><td>MC · 500 runs</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="insight-box">
+            <div class="insight-hd"><span class="dot"></span><span>Design Decision · Trade-off</span><span class="tag">№ 03</span></div>
+            <div class="insight-bd">
+                <div class="insight-ic"><i class="fas fa-balance-scale"></i></div>
+                <div class="insight-t">
+                    The offset miss is the optimizer doing its job honestly — the sizing that hits power <em>and</em> GBW puts the cascode pair right at a Pelgrom boundary. Fix is a 2× interdigitated layout of M5/M6; expected to bring 3σ offset to ≈3.9 mV at the cost of ~40 µm² area.
+                </div>
+            </div>
+        </div>
+
+        <!-- § 04 Methodology -->
+        <div class="section-heading" id="sec-methodology">
+            <span class="section-num">§ 04</span>
+            <h2>gm/I<sub>D</sub> <em>Methodology</em></h2>
+            <span class="section-tag">Silveira, Flandre, Jespers · 1996</span>
+        </div>
+
+        <p>The core idea: transistor behaviour, normalised by current, is mostly independent of width. Sweep L over a handful of values and V<sub>GS</sub> from weak to strong inversion, tabulate gm/I<sub>D</sub>, f<sub>T</sub>, and intrinsic gain — then sizing becomes a <strong>lookup instead of an iterative solve</strong>.</p>
+
+        <ul>
+            <li><strong>Weak inversion</strong> (gm/I<sub>D</sub> ≈ 25–28 V⁻¹) — maximum efficiency, lowest f<sub>T</sub></li>
+            <li><strong>Moderate inversion</strong> (gm/I<sub>D</sub> ≈ 10–25 V⁻¹) — best speed-per-power tradeoff</li>
+            <li><strong>Strong inversion</strong> (gm/I<sub>D</sub> ≈ 2–10 V⁻¹) — maximum speed, least efficient</li>
+        </ul>
+
+        <p>This tool parameterises each branch by its inversion coefficient, sweeps the four degrees of freedom, and evaluates GBW, noise, and gain analytically from the LUTs. A full Pareto sweep finishes in under 4 seconds on a laptop.</p>
+
+        <!-- § 05 Code -->
+        <div class="section-heading" id="sec-code">
+            <span class="section-num">§ 05</span>
+            <h2>Optimizer <em>Code</em></h2>
+            <span class="section-tag">MATLAB · Core loop</span>
+        </div>
+
+        <p>The inner loop is branch-and-bound over the four degrees of freedom. LUTs are generated once with a Cadence-driven sweep and cached on disk.</p>
+
+        <div class="code-block">
+            <div class="code-block-head">
+                <div><span class="code-lang-badge matlab">MATLAB</span><span class="code-file">sizeFoldedCascode.m</span></div>
+                <button class="copy-btn"><i class="fas fa-copy"></i> <span>COPY</span></button>
+            </div>
+            <pre>% gm/ID sizing for a folded-cascode OTA
+% req - target struct: GBW, PM, power, gain, CL
+% lut - precomputed gm/ID lookup (TSMC 180n, N & P)
+
+gmId_in   = 10:0.5:22;           % input-pair sweep
+gmId_casc =  5:0.5:12;           % cascode sweep
+L_in      = [0.18 0.25 0.35 0.5]; % µm
+kappa     =  0.2:0.05:0.5;       % branch ratio
+
+best = struct('cost', inf);
+
+for gi = gmId_in, for gc = gmId_casc
+    for L = L_in,  for k = kappa
+        cand = solveBranch(gi, gc, L, k, req, lut);
+        if meetsSpec(cand, req) && cand.power < best.cost
+            best = cand; best.cost = cand.power;
+        end
+    end, end
+end, end
+
+spec = annotate(best, req);  % adds margins + pass/fail</pre>
+        </div>
+
+        <p>A runnable Python equivalent — edit <code>gmid_target</code> and hit <strong>Run</strong>:</p>
+
+        <div class="code-block">
+            <div class="code-block-head">
+                <div><span class="code-lang-badge python">PYTHON</span><span class="code-file">ota_sizing.py</span></div>
+                <button class="copy-btn"><i class="fas fa-copy"></i> <span>COPY</span></button>
+            </div>
+            <pre><code class="language-python">import numpy as np
+
+# Simulated PDK characterisation data
+gmid_vec = np.linspace(5, 25, 200)
+ft_vec   = 45e9  * np.exp(-0.065 * (gmid_vec - 10)) * (1 + 0.3 * np.exp(-(gmid_vec - 5)))
+gds_vec  = 0.05  * np.exp(-0.04  * gmid_vec)
+idw_vec  = 12e-6 * np.exp(-0.09  * (gmid_vec - 5))
+
+# Design inputs (edit these)
+gmid_target = 15.0   # V^-1 — try 8 (fast) to 22 (low power)
+ID          = 100e-6 # A
+CL          = 2e-12  # F
+
+gm    = gmid_target * ID
+fT    = np.interp(gmid_target, gmid_vec, ft_vec)
+gds   = np.interp(gmid_target, gmid_vec, gds_vec) * ID
+IDW   = np.interp(gmid_target, gmid_vec, idw_vec)
+W     = ID / IDW
+Av    = gm / gds
+GBW   = gm / (2 * np.pi * CL)
+PM_est = 90 - np.degrees(np.arctan(GBW / (fT * 0.3)))
+
+print(f"gm/ID  : {gmid_target:.1f} V⁻¹")
+print(f"gm     : {gm*1e3:.3f} mA/V")
+print(f"W      : {W:.2f} µm")
+print(f"Av     : {20*np.log10(Av):.1f} dB")
+print(f"GBW    : {GBW/1e6:.1f} MHz")
+print(f"PM est : ~{max(0,PM_est):.0f}°  {'✓ Stable' if PM_est > 45 else '⚠ Marginal'}")</code></pre>
+        </div>
+
+        <!-- § 06 Interactive Calculator -->
+        <div class="section-heading" id="sec-calculator">
+            <span class="section-num">§ 06</span>
+            <h2>Interactive <em>Calculator</em></h2>
+            <span class="section-tag">gm/ID · Live sizing</span>
+        </div>
+
+        <p>Explore the design space interactively. Adjust gm/I<sub>D</sub>, bias current, and load capacitance to see how GBW, gain, and power respond in real time.</p>
+        <div id="gmid-calc-root"></div>
+
+        <!-- SHARE -->
+        <div class="share-section">
+            <span>Share this project:</span>
+            <div class="share-btns">
+                <a href="https://twitter.com/intent/tweet?url=&text=Folded+Cascode+OTA+Optimizer" target="_blank" class="share-btn" aria-label="Share on Twitter"><i class="fab fa-twitter"></i></a>
+                <a href="https://www.linkedin.com/sharing/share-offsite/?url=" target="_blank" class="share-btn" aria-label="Share on LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+                <a href="#" class="share-btn" id="copy-link-btn" aria-label="Copy link"><i class="fas fa-link"></i></a>
+            </div>
+        </div>
+
+        <div style="margin-top:2rem;">
+            <a href="../index.html#projects" class="btn-notebook"><i class="fas fa-arrow-left"></i> Back to All Projects</a>
+        </div>
+
+    </div><!-- end project-content -->
+</div><!-- end page-wrap -->
+</div><!-- end page-outer -->
+
+<footer class="page-footer">
+    <span>© 2026 <b>JATIN</b> <span class="c">/ ANALOG IC DESIGN</span></span>
+    <span class="c">ANL-2026-042 · REV 0.4.2</span>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<script src="../js/gmid-calculator.js"></script>
+<script src="../js/code-runner.js"></script>
+<script src="../js/page-tools.js"></script>
+<script>
+    // Copy buttons on code blocks
+    document.querySelectorAll('.copy-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            const pre = btn.closest('.code-block').querySelector('pre');
+            navigator.clipboard.writeText(pre ? pre.innerText : '').then(() => {
+                const span = btn.querySelector('span');
+                btn.classList.add('copied');
+                if (span) span.textContent = 'COPIED';
+                setTimeout(() => { btn.classList.remove('copied'); if (span) span.textContent = 'COPY'; }, 2000);
+            });
+        });
+    });
+
+    // TOC active state
+    const tocLinks = [...document.querySelectorAll('#toc a')];
+    const tocSections = tocLinks.map(a => document.getElementById(a.getAttribute('href').slice(1))).filter(Boolean);
+    function updateToc() {
+        const y = window.scrollY + 100;
+        let cur = tocSections[0]?.id;
+        for (const s of tocSections) if (s.offsetTop <= y) cur = s.id;
+        tocLinks.forEach(a => a.classList.toggle('active', a.getAttribute('href') === `#${cur}`));
+    }
+    window.addEventListener('scroll', updateToc, { passive: true });
+    updateToc();
+
+    // Copy page link button
+    document.getElementById('copy-link-btn')?.addEventListener('click', e => {
+        e.preventDefault();
+        navigator.clipboard.writeText(window.location.href).then(() => {
+            const btn = e.currentTarget;
+            btn.innerHTML = '<i class="fas fa-check"></i>';
+            setTimeout(() => { btn.innerHTML = '<i class="fas fa-link"></i>'; }, 2000);
+        });
+    });
+
+    // Dark mode toggle functionality
+    const toggleBtn = document.getElementById('theme-toggle');
+    if (toggleBtn) {
+        const moonIcon = '<i class="fas fa-moon"></i>';
+        const sunIcon = '<i class="fas fa-sun"></i>';
+        const updateButton = () => {
+            const isDark = document.body.classList.contains('dark-theme');
+            toggleBtn.innerHTML = isDark ? sunIcon : moonIcon;
+        };
+        updateButton();
+        toggleBtn.addEventListener('click', () => {
+            document.body.classList.toggle('dark-theme');
+            const isDark = document.body.classList.contains('dark-theme');
+            localStorage.setItem('jatin-theme-pref', isDark ? 'dark' : 'light');
+            updateButton();
+        });
+    }
+</script>
+</body>
+</html>

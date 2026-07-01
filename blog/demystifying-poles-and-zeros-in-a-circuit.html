@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Demystifying Poles and Zeros in a circuit | Jatin</title>
+    <meta name="description" content="A comprehensive guide to understanding and analyzing the poles and zeros in electronic circuits.">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,300..700;1,8..60,300..700&family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&family=EB+Garamond:ital,wght@0,400..700;1,400..700&family=Jost:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <script>
+        MathJax = {
+            tex: { inlineMath: [['\\(','\\)']], displayMath: [['\\[','\\]']], processEscapes: true },
+            options: { skipHtmlTags: ['script','noscript','style','textarea','pre','code'] }
+        };
+    </script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <style>
+        :root {
+            --paper:     #0e0e0e;
+            --paper-2:   #161616;
+            --paper-3:   #1e1e1e;
+            --line:      #2a2a2a;
+            --line-soft: #222222;
+            --ink:       #f7f2ea;
+            --ink-soft:  #c8c0b0;
+            --ink-dim:   #8a8278;
+            --ink-dimmer:#6a6258;
+            --blue:      #7ca8d4;
+            --accent:    #b8965a;
+            --green:     #5aad6a;
+            --amber:     #d4a574;
+            --red:       #d45a4a;
+            --serif:     'Source Serif 4', Georgia, serif;
+            --sans:      'Inter', system-ui, sans-serif;
+            --mono:      'JetBrains Mono', ui-monospace, monospace;
+        }
+        * { box-sizing: border-box; }
+        html, body { margin: 0; background: var(--paper); color: var(--ink); font-family: var(--sans); font-size: 15px; line-height: 1.6; -webkit-font-smoothing: antialiased; }
+        a { color: inherit; text-decoration: none; }
+
+        /* NAVBAR */
+        .navbar { position: sticky; top: 0; z-index: 100; background: var(--ink); display: flex; align-items: center; justify-content: space-between; padding: 0 32px; height: 52px; border-bottom: 2px solid var(--accent); }
+        .nav-logo { font-family: var(--mono); font-size: 14px; font-weight: 600; color: var(--paper); letter-spacing: 0.06em; }
+        .nav-logo span { color: var(--accent); }
+        .nav-links { display: flex; gap: 28px; }
+        .nav-links a { font-family: var(--mono); font-size: 11px; color: #8f9aab; letter-spacing: 0.1em; text-transform: uppercase; transition: color .15s; }
+        .nav-links a:hover, .nav-links a.active { color: var(--paper); }
+        .nav-back { font-family: var(--mono); font-size: 11px; color: var(--accent); letter-spacing: 0.1em; display: flex; align-items: center; gap: 6px; transition: opacity .15s; }
+        .nav-back:hover { opacity: 0.7; }
+
+        /* READING PROGRESS */
+        #reading-progress { position: fixed; top: 52px; left: 0; width: 0%; height: 3px; background: var(--accent); z-index: 200; transition: width .1s linear; }
+
+        /* HEADER */
+        .page-kicker { font-family: var(--mono); font-size: 11px; color: var(--accent); letter-spacing: 0.18em; font-weight: 600; margin-bottom: 14px; display: flex; align-items: center; gap: 10px; }
+        .page-kicker::before { content: ''; width: 24px; height: 2px; background: var(--accent); }
+        h1.page-title { font-family: var(--serif); font-size: 42px; font-weight: 600; line-height: 1.1; letter-spacing: -0.02em; margin: 0 0 16px; color: var(--ink); }
+        .page-subtitle { font-family: var(--serif); font-size: 18px; color: var(--ink-soft); line-height: 1.55; margin: 0 0 20px; }
+        .meta-row { display: flex; align-items: center; flex-wrap: wrap; gap: 10px; margin-bottom: 28px; }
+        .meta-chip { font-family: var(--mono); font-size: 10.5px; padding: 4px 10px; background: var(--paper-2); border: 1px solid var(--line); color: var(--ink-soft); letter-spacing: 0.04em; font-weight: 500; }
+        .meta-chip.primary { background: var(--ink); color: var(--paper); border-color: var(--ink); }
+        .page-header { margin-bottom: 2.5rem; padding-bottom: 2rem; border-bottom: 2px solid var(--ink); }
+
+        /* BODY TEXT */
+        .page-content h2 { font-family: var(--serif); font-size: 24px; font-weight: 600; letter-spacing: -0.01em; margin: 2.5rem 0 1rem; padding-bottom: 10px; border-bottom: 1px solid var(--line); color: var(--ink); }
+        .page-content h2:first-child { margin-top: 0; }
+        .page-content h3 { font-family: var(--serif); font-size: 19px; font-weight: 600; color: var(--ink); margin: 1.75rem 0 0.6rem; }
+        .page-content h4 { font-family: var(--serif); font-size: 16px; font-weight: 600; color: var(--ink); margin: 1.25rem 0 0.5rem; }
+        .page-content p { color: var(--ink-soft); line-height: 1.8; margin-bottom: 1rem; font-size: 15.5px; }
+        .page-content p strong { color: var(--ink); font-weight: 600; }
+        .page-content p em { color: var(--blue); font-style: italic; }
+        .page-content ul, .page-content ol { color: var(--ink-soft); margin: 0 0 1rem 1.4rem; }
+        .page-content li { margin-bottom: 6px; line-height: 1.7; font-size: 15px; }
+        .page-content li strong { color: var(--ink); }
+        .page-content code { background: rgba(14,42,74,0.1); padding: 0.15rem 0.45rem; font-family: var(--mono); font-size: 0.87em; color: var(--blue); }
+
+        /* MATH */
+        .math-block { background: var(--paper-2); padding: 1.1rem 1.4rem; border-left: 3px solid var(--blue); margin: 1.1rem 0; overflow-x: auto; font-size: 1.05em; }
+
+        /* INFO / INSIGHT BOX */
+        .info-box, .insight-box { margin: 1.5rem 0; border: 1px solid var(--line); border-left: 3px solid var(--accent); background: var(--paper-2); padding: 14px 16px; }
+        .info-box strong, .insight-box strong { color: var(--accent); font-weight: 700; }
+
+        /* CODE BLOCK */
+        .code-block { border: 1px solid var(--ink); margin: 1.25rem 0; background: #1a1f28; overflow: hidden; }
+        .code-block-head { display: flex; justify-content: space-between; align-items: center; padding: 8px 14px; background: #0d1219; border-bottom: 1px solid #2a3140; }
+        .code-lang-badge { font-family: var(--mono); font-size: 10px; font-weight: 700; letter-spacing: 0.14em; padding: 2px 8px; }
+        .code-lang-badge.matlab { background: #b54a2b; color: #f2ede2; }
+        .code-lang-badge.python { background: #2f6a3e; color: #f2ede2; }
+        .code-lang-badge.default { background: #3a4656; color: #d5dce8; }
+        .copy-btn { font-family: var(--mono); font-size: 10px; color: #a7b4c8; letter-spacing: 0.12em; padding: 4px 10px; background: transparent; border: 1px solid #3a4656; cursor: pointer; display: inline-flex; align-items: center; gap: 5px; transition: all .15s; }
+        .copy-btn:hover { color: var(--paper); border-color: #6a7485; }
+        .copy-btn.copied { color: #77c487; border-color: #77c487; }
+        .code-block pre { margin: 0; padding: 1.1rem 1.4rem; font-family: var(--mono); font-size: 13px; line-height: 1.7; overflow-x: auto; color: #d5dce8; white-space: pre; }
+        .code-block pre code { background: none; padding: 0; color: inherit; font-size: inherit; }
+
+        /* TABLE */
+        .page-content table { width: 100%; border-collapse: collapse; margin: 1.5rem 0; border: 1px solid var(--ink); }
+        .page-content th { text-align: left; padding: 9px 14px; background: var(--ink); color: var(--paper); font-family: var(--mono); font-size: 10px; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; }
+        .page-content td { padding: 11px 14px; border-bottom: 1px solid var(--line-soft); color: var(--ink-soft); }
+        .page-content tbody tr:nth-child(odd) { background: var(--paper-2); }
+        .page-content tbody tr:hover { background: var(--paper-3); }
+
+        /* BLOCKQUOTE */
+        .page-content blockquote { border-left: 3px solid var(--accent); padding: 1rem 1rem 1rem 1.4rem; margin: 1.5rem 0; color: var(--ink-soft); font-family: var(--serif); font-style: italic; font-size: 16.5px; background: var(--paper-2); }
+
+        /* FIGURE */
+        .content-figure { margin: 1.75rem 0; text-align: center; background: var(--paper-2); padding: 1.25rem; border: 1px solid var(--line); }
+        .content-figure img { max-width: 100%; height: auto; display: block; margin: 0 auto; }
+        .content-figure figcaption { color: var(--ink-dim); font-size: 0.87rem; margin-top: 0.7rem; font-family: var(--mono); letter-spacing: 0.04em; }
+
+        /* PROJECT ACTION BUTTONS */
+        .project-actions { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 28px; }
+        .btn-notebook { font-family: var(--mono); font-size: 11px; font-weight: 600; letter-spacing: 0.12em; padding: 8px 18px; border: 1.5px solid var(--ink); color: var(--ink); background: transparent; text-decoration: none; display: inline-flex; align-items: center; gap: 7px; transition: all .15s; }
+        .btn-notebook:hover { background: var(--ink); color: var(--paper); }
+        .btn-notebook.primary { background: var(--ink); color: var(--paper); }
+        .btn-notebook.primary:hover { background: var(--accent); border-color: var(--accent); }
+
+        /* BACK LINK */
+        .back-link { display: inline-flex; align-items: center; gap: 6px; font-family: var(--mono); font-size: 11px; color: var(--accent); letter-spacing: 0.1em; margin-bottom: 2.5rem; transition: opacity .15s; }
+        .back-link:hover { opacity: 0.7; }
+
+        /* AUTHOR */
+        .author-section { display: flex; align-items: flex-start; gap: 1.25rem; padding: 1.5rem; background: var(--paper-2); border: 1px solid var(--line); border-left: 3px solid var(--ink); margin-top: 3rem; }
+        .author-avatar { width: 48px; height: 48px; background: var(--ink); display: flex; align-items: center; justify-content: center; font-size: 1.2rem; color: var(--paper); flex-shrink: 0; }
+        .author-info h4 { font-family: var(--mono); font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase; font-weight: 600; color: var(--ink); margin: 0 0 6px; }
+        .author-info p { color: var(--ink-soft); font-size: 0.9rem; margin: 0; line-height: 1.6; }
+
+        /* SHARE */
+        .share-section { display: flex; align-items: center; gap: 1rem; margin-top: 2rem; padding-top: 1.5rem; border-top: 1px solid var(--line); flex-wrap: wrap; }
+        .share-section span { font-family: var(--mono); font-size: 11px; color: var(--ink-soft); letter-spacing: 0.1em; text-transform: uppercase; }
+        .share-btns { display: flex; gap: 0.75rem; }
+        .share-btn { width: 38px; height: 38px; border-radius: 50%; border: 1.5px solid var(--line); display: flex; align-items: center; justify-content: center; color: var(--ink-dim); font-size: 14px; transition: all 0.2s ease; text-decoration: none; }
+        .share-btn:hover { border-color: var(--accent); color: var(--accent); transform: translateY(-2px); }
+
+        /* gm/ID calculator retheme */
+        #gmid-calc-root { margin: 1.5rem 0; }
+        #gmid-calc-root .gmid-calculator,
+        #gmid-calc-root [class*="calculator"] { background: var(--paper-2) !important; border: 1px solid var(--line) !important; border-radius: 0 !important; color: var(--ink) !important; }
+        #gmid-calc-root input[type=range] { accent-color: var(--accent); }
+        #gmid-calc-root label, #gmid-calc-root p, #gmid-calc-root span, #gmid-calc-root div { color: var(--ink-soft) !important; font-family: var(--sans) !important; }
+        #gmid-calc-root .calc-value, #gmid-calc-root [class*="value"], #gmid-calc-root [class*="result"] { color: var(--ink) !important; font-family: var(--mono) !important; }
+        #gmid-calc-root canvas { filter: hue-rotate(160deg) saturate(0.7) brightness(0.8); }
+
+        /* FOOTER */
+        .page-footer { background: var(--ink); color: var(--paper); padding: 20px 32px; display: flex; justify-content: space-between; align-items: center; font-family: var(--mono); font-size: 10px; letter-spacing: 0.12em; }
+        .page-footer .c { color: #6a7485; }
+
+            .page-outer { padding: 24px !important; }
+            body { background: white !important; }
+        }
+
+        /* THEME TOGGLE BUTTON */
+        .theme-toggle-btn {
+            display: none;
+        }
+
+        /* DARK THEME OVERRIDES */
+        body.dark-theme {
+            --paper:     #0e0e0e;
+            --paper-2:   #161616;
+            --paper-3:   #1e1e1e;
+            --line:      #2a2a2a;
+            --line-soft: #222222;
+            --ink:       #f7f2ea;
+            --ink-soft:  #c8c0b0;
+            --ink-dim:   #8a8278;
+            --ink-dimmer:#6a6258;
+            --blue:      #7ca8d4;
+            --accent:    #b8965a;
+            --green:     #5aad6a;
+            --amber:     #d4a574;
+            --red:       #d45a4a;
+        }
+        body.dark-theme .navbar { background: #0a0a0a; border-bottom-color: var(--accent); }
+        body.dark-theme .author-avatar { background: var(--paper-3); color: var(--ink); }
+
+        .page-outer { max-width: 940px; margin: 0 auto; padding: 48px 40px 80px; }
+    </style>
+</head>
+<body>
+<script>
+    if (localStorage.getItem('jatin-theme-pref') === 'dark') {
+        document.body.classList.add('dark-theme');
+    }
+</script>
+
+<div id="reading-progress"></div>
+
+
+<nav class="navbar">
+    <a href="../index.html" class="nav-logo">&lt;<span>Jatin</span>/&gt;</a>
+    <div class="nav-links">
+        <a href="../index.html#home">Home</a>
+        <a href="../index.html#about">About</a>
+        <a href="../index.html#projects">Projects</a>
+        <a href="../index.html#skills">Skills</a>
+        <a href="../index.html#blog" class="active">Blog</a>
+        <a href="../index.html#contact">Contact</a>
+    </div>
+    <!-- Theme Toggle -->
+    <button id="theme-toggle" class="theme-toggle-btn" aria-label="Toggle dark mode">
+        <i class="fas fa-moon"></i>
+    </button>
+    <a href="../index.html#blog" class="nav-back"><i class="fas fa-arrow-left"></i> BLOG</a>
+</nav>
+
+<main class="page-outer">
+
+    <a href="../index.html#blog" class="back-link">
+        <i class="fas fa-arrow-left"></i> BACK TO BLOG
+    </a>
+
+    <header class="page-header">
+        <div class="page-kicker">Tutorial</div>
+        <h1 class="page-title">Demystifying Poles and Zeros in a circuit</h1>
+        <p class="page-subtitle">A step-by-step approach to analyzing the stability and frequency response of electronic circuits.</p>
+        <div class="meta-row">
+            <span class="meta-chip primary">Tutorial</span>
+            <span class="meta-chip"><i class="far fa-calendar" style="margin-right:5px;"></i>June 22, 2026</span>
+            <span class="meta-chip"><i class="far fa-clock" style="margin-right:5px;"></i>5 min read</span>
+            <span class="meta-chip"><i class="far fa-user" style="margin-right:5px;"></i>Jatin</span>
+        </div>
+    </header>
+
+    <div class="page-content">
+<h2>Introduction</h2>
+
+<p>Poles and zeros are fundamental concepts in circuit analysis that determine the
+frequency response and stability of electronic circuits. Understanding how to
+identify and analyze them is crucial for designing and optimizing any analog circuit.</p>
+
+<p>In this tutorial, we'll explore the fundamentals of poles and zeros and demonstrate how to
+apply them to real-world circuit design problems.</p>
+
+<h2>What are Poles and Zeros?</h2>
+
+<p>Poles and zeros are the roots of the numerator and denominator of a transfer function, respectively. In simpler terms, they represent the frequencies at which the circuit's response becomes zero or infinite.</p>
+
+<div class="math-block">\[ H(s) = \frac{N(s)}{D(s)} \]</div>
+
+<p>where \(N(s)\) is the numerator polynomial and \(D(s)\) is the denominator polynomial. The poles and zeros are the roots of these polynomials.</p>
+
+<ul>
+    <li>Velocity saturation effects</li>
+    <li>Short-channel effects</li>
+    <li>Mobility degradation</li>
+    <li>Threshold voltage variations</li>
+</ul>
+
+<div class="insight-box"><strong>Key Insight:</strong> The gm/ID ratio provides a technology-independent
+    measure of transistor efficiency, ranging from strong inversion (~5 V⁻¹)
+    to weak inversion (~25 V⁻¹).</div>
+
+<h2>The Fundamental Relationship</h2>
+
+<p>The cornerstone of this methodology is the gm/ID ratio:</p>
+
+<div class="math-block">\[ \frac{g_m}{I_D} = \frac{2}{V_{GS} - V_{TH}} \quad \text{(strong inversion)} \]</div>
+
+<p>And in weak inversion:</p>
+
+<div class="math-block">\[ \frac{g_m}{I_D} = \frac{q}{nkT} \approx \frac{1}{n \cdot 26\text{mV}} \]</div>
+
+<h2>Design Procedure</h2>
+
+<p>The gm/ID design flow follows these steps:</p>
+
+<h3>Step 1: Define Specifications</h3>
+
+<p>Start with your circuit requirements:</p>
+
+<ul>
+    <li>Required transconductance: \(g_m = 1 \text{ mS}\)</li>
+    <li>Available current: \(I_D = 100 \mu\text{A}\)</li>
+    <li>Minimum \(f_T\): 1 GHz</li>
+</ul>
+
+<h3>Step 2: Calculate Target gm/ID</h3>
+
+<div class="math-block">\[ \frac{g_m}{I_D} = \frac{1 \text{ mS}}{100 \mu\text{A}} = 10 \text{ V}^{-1} \]</div>
+
+<h3>Step 4: Size the Transistor</h3>
+
+<p>Using the normalized current density from lookup tables:</p>
+
+<div class="math-block">\[ W = \frac{I_D}{I_D/W} = \frac{I_D}{\text{lookup}(g_m/I_D,\; I_D/W)} \]</div>
+
+<h2>Practical Example: OTA Input Stage</h2>
+
+<p>Let's design the input differential pair for an OTA:</p>
+
+<table>
+<thead>
+    <tr><th>Parameter</th><th>Value</th></tr>
+</thead>
+<tbody>
+    <tr><td>Input transconductance</td><td>500 µS</td></tr>
+    <tr><td>Bias current per branch</td><td>50 µA</td></tr>
+    <tr><td>Minimum transit frequency</td><td>500 MHz</td></tr>
+</tbody>
+</table>
+
+<p>From these specifications, we get \(g_m/I_D = 10 \text{ V}^{-1}\), placing our design
+in moderate inversion — a good tradeoff between speed and power.</p>
+
+<div id="gmid-calc-root"></div>
+
+<h2>Conclusion</h2>
+
+<p>The gm/ID methodology provides a systematic, technology-aware approach to analog
+design. By using characterized device data rather than simplified models, designers
+can achieve better first-pass success rates and more optimal designs.</p>
+
+<blockquote>
+    "The gm/ID methodology bridges the gap between hand calculations and simulation,
+    enabling designers to make informed tradeoffs before committing to detailed design."
+</blockquote>
+    </div>
+
+    <div class="author-section">
+        <div class="author-avatar"><i class="fas fa-user"></i></div>
+        <div class="author-info">
+            <h4>Written by Jatin</h4>
+            <p>Analog Circuit Design Engineer passionate about pushing the boundaries of silicon design.
+            Specializing in OTAs, data converters, and design automation.</p>
+        </div>
+    </div>
+
+    <div class="share-section">
+        <span>Share:</span>
+        <div class="share-btns">
+            <a href="#" class="share-btn" aria-label="Share on Twitter"><i class="fab fa-twitter"></i></a>
+            <a href="#" class="share-btn" aria-label="Share on LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+            <a href="#" class="share-btn" aria-label="Copy link"
+               onclick="navigator.clipboard.writeText(location.href);return false;"><i class="fas fa-link"></i></a>
+        </div>
+    </div>
+
+    <div style="text-align:center; margin-top:3rem;">
+        <a href="../index.html#blog" class="btn-notebook"><i class="fas fa-arrow-left"></i> BACK TO ALL POSTS</a>
+    </div>
+
+</main>
+
+<footer class="page-footer">
+    <span>&copy; 2026 Jatin</span>
+    <span class="c">Analog Circuit Design</span>
+</footer>
+
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<script src="../js/gmid-calculator.js"></script>
+<script src="../js/code-runner.js"></script>
+<script>
+    window.addEventListener('scroll', () => {
+        const el = document.getElementById('reading-progress');
+        if (!el) return;
+        const h = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+        el.style.width = (h > 0 ? (window.pageYOffset / h) * 100 : 0) + '%';
+    });
+    function copyCode(btn) {
+        const code = btn.closest('.code-block').querySelector('code').innerText;
+        navigator.clipboard.writeText(code).then(() => {
+            const icon = btn.querySelector('i');
+            const old = icon.className; icon.className = 'fas fa-check';
+            btn.classList.add('copied');
+            setTimeout(() => { icon.className = old; btn.classList.remove('copied'); }, 2000);
+        });
+    }
+
+    // Dark mode toggle functionality
+    const toggleBtn = document.getElementById('theme-toggle');
+    if (toggleBtn) {
+        const moonIcon = '<i class="fas fa-moon"></i>';
+        const sunIcon = '<i class="fas fa-sun"></i>';
+        const updateButton = () => {
+            const isDark = document.body.classList.contains('dark-theme');
+            toggleBtn.innerHTML = isDark ? sunIcon : moonIcon;
+        };
+        updateButton();
+        toggleBtn.addEventListener('click', () => {
+            document.body.classList.toggle('dark-theme');
+            const isDark = document.body.classList.contains('dark-theme');
+            localStorage.setItem('jatin-theme-pref', isDark ? 'dark' : 'light');
+            updateButton();
+        });
+    }
+</script>
+</body>
+</html>
