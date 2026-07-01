@@ -560,6 +560,84 @@
             margin-bottom: 35px;
         }
 
+        /* ── MOBILE RESPONSIVE: Hero Section ── */
+        @media (max-width: 1024px) {
+            #home .hero-content,
+            #home .hero-wrapper {
+                flex-direction: column !important;
+                grid-template-columns: 1fr !important;
+                text-align: center;
+                align-items: center;
+            }
+
+            .right-column-container {
+                width: 100%;
+                align-items: center;
+            }
+
+            .graphic-viewport {
+                width: min(320px, 90vw);
+                height: min(320px, 90vw);
+            }
+        }
+
+        @media (max-width: 768px) {
+            #home .hero-name {
+                font-size: 48px !important;
+            }
+
+            #home .hero-title-wrapper {
+                font-size: 18px !important;
+                justify-content: center;
+            }
+
+            #home .hero-description {
+                font-size: 15px !important;
+                text-align: center;
+            }
+
+            #home .hero-cta {
+                flex-direction: column;
+                align-items: center;
+                width: 100%;
+            }
+
+            #home .hero-cta .btn {
+                width: 100%;
+                max-width: 280px;
+                justify-content: center;
+            }
+
+            .graphic-viewport {
+                width: min(300px, 88vw);
+                height: min(300px, 88vw);
+            }
+
+            #home .hero-social {
+                justify-content: center;
+            }
+        }
+
+        @media (max-width: 480px) {
+            #home .hero-name {
+                font-size: 38px !important;
+            }
+
+            #home .hero-greeting {
+                font-size: 13px !important;
+            }
+
+            .graphic-viewport {
+                width: min(270px, 86vw);
+                height: min(270px, 86vw);
+            }
+
+            .cad-status-bar {
+                font-size: 7px;
+                padding: 4px 8px;
+            }
+        }
+
         /* Global button style overrides matching the floorplan design */
         .btn {
             font-family: var(--font-mono);
