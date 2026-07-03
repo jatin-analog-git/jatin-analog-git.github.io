@@ -168,7 +168,32 @@
         }
         body.dark-theme .author-avatar { background: var(--paper-3); color: var(--ink); }
 
-        .page-outer { max-width: 940px; margin: 0 auto; padding: 48px 40px 80px; }
+        .page-outer { max-width: 940px; margin: 0 auto; padding: 100px 40px 80px; }
+
+        @media (max-width: 768px) {
+            .page-outer {
+                padding-top: 80px !important;
+                padding-left: 20px !important;
+                padding-right: 20px !important;
+                padding-bottom: 40px !important;
+            }
+            h1.page-title {
+                font-size: 28px !important;
+            }
+            .blog-content h2 {
+                font-size: 20px !important;
+            }
+            .blog-content table {
+                display: block;
+                width: 100%;
+                overflow-x: auto;
+                -webkit-overflow-scrolling: touch;
+            }
+            .btn {
+                width: 100%;
+                justify-content: center;
+            }
+        }
     </style>
 </head>
 <body>

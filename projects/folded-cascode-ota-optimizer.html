@@ -47,7 +47,7 @@
 
 
         /* ── PAGE LAYOUT ── */
-        .page-outer { display: grid; grid-template-columns: 200px minmax(0,1fr); max-width: 1140px; margin: 0 auto; }
+        .page-outer { display: grid; grid-template-columns: 200px minmax(0,1fr); max-width: 1140px; margin: 0 auto; padding-top: 60px; }
 
         /* ── SIDEBAR TOC ── */
         .toc-sidebar {
@@ -237,6 +237,35 @@
         body.dark-theme .insight-box,
         body.dark-theme .content-figure { background: var(--paper-2); border-color: var(--line); }
         body.dark-theme .toc-card a.active { color: var(--accent); }
+
+        @media (max-width: 768px) {
+            .page-outer {
+                display: block !important;
+                padding-top: 80px !important;
+                padding-left: 20px !important;
+                padding-right: 20px !important;
+                padding-bottom: 40px !important;
+            }
+            .toc-sidebar {
+                display: none !important;
+            }
+            .page-wrap {
+                padding: 0 !important;
+            }
+            h1.project-title {
+                font-size: 28px !important;
+            }
+            .section-heading h2 {
+                font-size: 20px !important;
+            }
+            .project-meta-row {
+                gap: 6px;
+            }
+            .btn {
+                width: 100%;
+                justify-content: center;
+            }
+        }
     </style>
 </head>
 <body>
