@@ -473,47 +473,51 @@ ul {
    BUTTONS
    ========================================== */
 .btn {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    text-decoration: none;
+    padding: 12px 24px;
+    border-radius: 4px;
+    font-weight: 600;
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    gap: var(--spacing-xs);
-    padding: 12px 24px;
-    background: transparent;
-    border: 1px solid var(--ink);
-    color: var(--ink);
-    font-family: var(--font-nav);
-    font-size: 13px;
-    font-weight: 600;
-    letter-spacing: 0.15em;
-    text-transform: uppercase;
-    cursor: pointer;
-    transition: var(--transition-fast);
+    gap: 8px;
+    transition: all 0.2s ease;
+    box-shadow: none !important;
+    transform: none !important;
 }
 
 .btn-primary {
-    background: transparent;
-    color: var(--ink);
-    border: 2px solid var(--ink);
-    box-shadow: 2px 2px 0 var(--ink);
+    background: var(--accent) !important;
+    color: #08080a !important;
+    border: 1.5px solid var(--accent) !important;
+    box-shadow: none !important;
 }
 
 .btn-primary:hover {
-    transform: translate(-1px, -1px);
-    box-shadow: 3px 3px 0 var(--ink);
-    background: transparent;
+    background: transparent !important;
+    color: var(--accent) !important;
+    border-color: var(--accent) !important;
+    transform: none !important;
+    box-shadow: none !important;
 }
 
 .btn-secondary {
-    background: transparent;
-    border: 1px dashed var(--ink-dim);
-    color: var(--ink-soft);
+    background: transparent !important;
+    color: var(--ink-soft) !important;
+    border: 1.5px solid var(--line) !important;
+    box-shadow: none !important;
 }
 
 .btn-secondary:hover {
-    border-style: solid;
-    border-color: var(--ink);
-    color: var(--ink);
-    background: transparent;
+    color: var(--ink) !important;
+    border-color: var(--ink-soft) !important;
+    background: transparent !important;
+    transform: none !important;
+    box-shadow: none !important;
 }
 
 .btn-full {

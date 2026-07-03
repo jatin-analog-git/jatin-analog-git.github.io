@@ -10,6 +10,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,300..700;1,8..60,300..700&family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&family=EB+Garamond:ital,wght@0,400..700;1,400..700&family=Jost:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="../css/styles-notebook.css">
 
     <script>
         MathJax = {
@@ -43,21 +44,7 @@
         html, body { margin: 0; background: var(--paper); color: var(--ink); font-family: var(--sans); font-size: 15px; line-height: 1.6; -webkit-font-smoothing: antialiased; }
         a { color: inherit; text-decoration: none; }
 
-        /* ── NAVBAR ── */
-        .navbar {
-            position: sticky; top: 0; z-index: 100;
-            background: var(--ink);
-            display: flex; align-items: center; justify-content: space-between;
-            padding: 0 32px; height: 52px;
-            border-bottom: 2px solid var(--accent);
-        }
-        .nav-logo { font-family: var(--mono); font-size: 14px; font-weight: 600; color: var(--paper); letter-spacing: 0.06em; }
-        .nav-logo span { color: var(--accent); }
-        .nav-links { display: flex; gap: 28px; }
-        .nav-links a { font-family: var(--mono); font-size: 11px; color: #8f9aab; letter-spacing: 0.1em; text-transform: uppercase; transition: color .15s; }
-        .nav-links a:hover, .nav-links a.active { color: var(--paper); }
-        .nav-back { font-family: var(--mono); font-size: 11px; color: var(--accent); letter-spacing: 0.1em; display: flex; align-items: center; gap: 6px; transition: opacity .15s; }
-        .nav-back:hover { opacity: 0.7; }
+
 
         /* ── PAGE LAYOUT ── */
         .page-outer { display: grid; grid-template-columns: 200px minmax(0,1fr); max-width: 1140px; margin: 0 auto; }
@@ -246,7 +233,6 @@
             --amber:     #d4a574;
             --red:       #d45a4a;
         }
-        body.dark-theme .navbar { background: #0a0a0a; border-bottom-color: var(--accent); }
         body.dark-theme .toc-card,
         body.dark-theme .insight-box,
         body.dark-theme .content-figure { background: var(--paper-2); border-color: var(--line); }
@@ -261,22 +247,36 @@
 </script>
 
 <!-- NAVBAR -->
-<nav class="navbar">
-    <a href="../index.html" class="nav-logo">&lt;<span>Jatin</span>/&gt;</a>
-    <div class="nav-links">
-        <a href="../index.html#about">About</a>
-        <a href="../index.html#projects" class="active">Projects</a>
-        <a href="../index.html#skills">Skills</a>
-        <a href="../index.html#blog">Blog</a>
-        <a href="../index.html#contact">Contact</a>
+<nav class="navbar" id="navbar">
+    <div class="nav-container">
+        <a class="nav-logo" href="../index.html#home">
+            <span class="logo-text">&lt;Jatin/&gt;</span>
+        </a>
+        <div class="nav-menu" id="nav-menu">
+            <!-- Navigation Links -->
+            <a class="nav-link" href="../index.html#home">Home</a>
+            <a class="nav-link" href="../index.html#about">About</a>
+            <a class="nav-link" href="../index.html#experience">Experience</a>
+            <a class="nav-link active" href="../index.html#projects">Projects</a>
+            <a class="nav-link" href="../index.html#skills">Skills</a>
+            <a class="nav-link" href="../index.html#blog">Blog</a>
+            <a class="nav-link" href="../index.html#contact">Contact</a>
+            <!-- Dark Mode Toggle -->
+            <button aria-label="Toggle dark mode" class="theme-toggle-btn" id="theme-toggle">
+                <i class="fas fa-moon"></i>
+            </button>
+            <!-- Resume Link -->
+            <a class="nav-btn" download="" href="../resume.pdf">
+                <i class="fas fa-download"></i> Resume
+            </a>
+        </div>
+        <!-- Mobile Menu Icon -->
+        <div class="hamburger" id="hamburger">
+            <span class="bar"></span>
+            <span class="bar"></span>
+            <span class="bar"></span>
+        </div>
     </div>
-    <!-- Theme Toggle -->
-    <button id="theme-toggle" class="theme-toggle-btn" aria-label="Toggle dark mode">
-        <i class="fas fa-moon"></i>
-    </button>
-    <a href="../index.html#projects" class="nav-back">
-        <i class="fas fa-arrow-left" style="font-size:10px;"></i> All Projects
-    </a>
 </nav>
 
 <div class="page-outer">
@@ -514,7 +514,7 @@ print(f"PM est : ~{max(0,PM_est):.0f}°  {'✓ Stable' if PM_est > 45 else '⚠ 
         </div>
 
         <div style="margin-top:2rem;">
-            <a href="../index.html#projects" class="btn-notebook"><i class="fas fa-arrow-left"></i> Back to All Projects</a>
+            <a href="../index.html#projects" class="btn btn-primary"><i class="fas fa-arrow-left"></i> Back to All Projects</a>
         </div>
 
     </div><!-- end project-content -->
@@ -581,6 +581,16 @@ print(f"PM est : ~{max(0,PM_est):.0f}°  {'✓ Stable' if PM_est > 45 else '⚠ 
             const isDark = document.body.classList.contains('dark-theme');
             localStorage.setItem('jatin-theme-pref', isDark ? 'dark' : 'light');
             updateButton();
+        });
+    }
+
+    // Hamburger mobile menu toggle
+    const hamburger = document.getElementById('hamburger');
+    const navMenu = document.getElementById('nav-menu');
+    if (hamburger && navMenu) {
+        hamburger.addEventListener('click', () => {
+            hamburger.classList.toggle('active');
+            navMenu.classList.toggle('active');
         });
     }
 </script>
