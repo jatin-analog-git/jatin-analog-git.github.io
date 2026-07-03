@@ -2306,8 +2306,8 @@ body.light-theme .hero-part-number {
     padding: 1.5rem;
 }
 
-/* Responsive styles for mobile screen sizes */
-@media (max-width: 768px) {
+/* Responsive styles for mobile and tablet screen sizes */
+@media (max-width: 1024px) {
     .roadmap-timeline::before {
         left: 20px;
         transform: none;
