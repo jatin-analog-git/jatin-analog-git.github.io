@@ -270,8 +270,8 @@
 </head>
 <body>
 <script>
-    if (localStorage.getItem('jatin-theme-pref') === 'dark') {
-        document.body.classList.add('dark-theme');
+    if (localStorage.getItem('jatin-theme-pref') === 'light') {
+        document.body.classList.add('light-theme');
     }
 </script>
 
@@ -601,14 +601,14 @@ print(f"PM est : ~{max(0,PM_est):.0f}°  {'✓ Stable' if PM_est > 45 else '⚠ 
         const moonIcon = '<i class="fas fa-moon"></i>';
         const sunIcon = '<i class="fas fa-sun"></i>';
         const updateButton = () => {
-            const isDark = document.body.classList.contains('dark-theme');
-            toggleBtn.innerHTML = isDark ? sunIcon : moonIcon;
+            const isLight = document.body.classList.contains('light-theme');
+            toggleBtn.innerHTML = isLight ? moonIcon : sunIcon;
         };
         updateButton();
         toggleBtn.addEventListener('click', () => {
-            document.body.classList.toggle('dark-theme');
-            const isDark = document.body.classList.contains('dark-theme');
-            localStorage.setItem('jatin-theme-pref', isDark ? 'dark' : 'light');
+            document.body.classList.toggle('light-theme');
+            const isLight = document.body.classList.contains('light-theme');
+            localStorage.setItem('jatin-theme-pref', isLight ? 'light' : 'dark');
             updateButton();
         });
     }

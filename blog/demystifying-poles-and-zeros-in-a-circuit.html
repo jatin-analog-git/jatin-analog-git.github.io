@@ -8,7 +8,7 @@
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,300..700;1,8..60,300..700&family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&family=EB+Garamond:ital,wght@0,400..700;1,400..700&family=Jost:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,400;8..60,500;8..60,600;8..60,700&family=JetBrains+Mono:wght@400;500;600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="../css/styles-notebook.css">
 
@@ -21,20 +21,20 @@
     <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <style>
         :root {
-            --paper:     #0e0e0e;
-            --paper-2:   #161616;
-            --paper-3:   #1e1e1e;
-            --line:      #2a2a2a;
-            --line-soft: #222222;
-            --ink:       #f7f2ea;
-            --ink-soft:  #c8c0b0;
-            --ink-dim:   #8a8278;
-            --ink-dimmer:#6a6258;
-            --blue:      #7ca8d4;
-            --accent:    #b8965a;
-            --green:     #5aad6a;
-            --amber:     #d4a574;
-            --red:       #d45a4a;
+            --paper:     #f2ede2;
+            --paper-2:   #ece6d7;
+            --paper-3:   #e4ddca;
+            --line:      #cdc5ae;
+            --line-soft: #ded6c0;
+            --ink:       #0f1620;
+            --ink-soft:  #3a4656;
+            --ink-dim:   #6a7485;
+            --ink-dimmer:#8f9aab;
+            --blue:      #0e2a4a;
+            --accent:    #b54a2b;
+            --green:     #2f6a3e;
+            --amber:     #8c6b1a;
+            --red:       #a8321e;
             --serif:     'Source Serif 4', Georgia, serif;
             --sans:      'Inter', system-ui, sans-serif;
             --mono:      'JetBrains Mono', ui-monospace, monospace;
@@ -42,8 +42,6 @@
         * { box-sizing: border-box; }
         html, body { margin: 0; background: var(--paper); color: var(--ink); font-family: var(--sans); font-size: 15px; line-height: 1.6; -webkit-font-smoothing: antialiased; }
         a { color: inherit; text-decoration: none; }
-
-
 
         /* READING PROGRESS */
         #reading-progress { position: fixed; top: 52px; left: 0; width: 0%; height: 3px; background: var(--accent); z-index: 200; transition: width .1s linear; }
@@ -108,14 +106,6 @@
 
         /* PROJECT ACTION BUTTONS */
         .project-actions { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 28px; }
-        .btn-notebook { font-family: var(--mono); font-size: 11px; font-weight: 600; letter-spacing: 0.12em; padding: 8px 18px; border: 1.5px solid var(--ink); color: var(--ink); background: transparent; text-decoration: none; display: inline-flex; align-items: center; gap: 7px; transition: all .15s; }
-        .btn-notebook:hover { background: var(--ink); color: var(--paper); }
-        .btn-notebook.primary { background: var(--ink); color: var(--paper); }
-        .btn-notebook.primary:hover { background: var(--accent); border-color: var(--accent); }
-
-        /* BACK LINK */
-        .back-link { display: inline-flex; align-items: center; gap: 6px; font-family: var(--mono); font-size: 11px; color: var(--accent); letter-spacing: 0.1em; margin-bottom: 2.5rem; transition: opacity .15s; }
-        .back-link:hover { opacity: 0.7; }
 
         /* AUTHOR */
         .author-section { display: flex; align-items: flex-start; gap: 1.25rem; padding: 1.5rem; background: var(--paper-2); border: 1px solid var(--line); border-left: 3px solid var(--ink); margin-top: 3rem; }
@@ -143,33 +133,13 @@
         .page-footer { background: var(--ink); color: var(--paper); padding: 20px 32px; display: flex; justify-content: space-between; align-items: center; font-family: var(--mono); font-size: 10px; letter-spacing: 0.12em; }
         .page-footer .c { color: #6a7485; }
 
+        @media print {
+            .navbar, .share-section, .page-footer { display: none !important; }
             .page-outer { padding: 24px !important; }
             body { background: white !important; }
         }
 
-
-
-        /* DARK THEME OVERRIDES */
-        body.dark-theme {
-            --paper:     #0e0e0e;
-            --paper-2:   #161616;
-            --paper-3:   #1e1e1e;
-            --line:      #2a2a2a;
-            --line-soft: #222222;
-            --ink:       #f7f2ea;
-            --ink-soft:  #c8c0b0;
-            --ink-dim:   #8a8278;
-            --ink-dimmer:#6a6258;
-            --blue:      #7ca8d4;
-            --accent:    #b8965a;
-            --green:     #5aad6a;
-            --amber:     #d4a574;
-            --red:       #d45a4a;
-        }
-        body.dark-theme .author-avatar { background: var(--paper-3); color: var(--ink); }
-
         .page-outer { max-width: 940px; margin: 0 auto; padding: 100px 40px 80px; }
-
         @media (max-width: 768px) {
             .page-outer {
                 padding-top: 80px !important;
@@ -180,10 +150,10 @@
             h1.page-title {
                 font-size: 28px !important;
             }
-            .blog-content h2 {
+            .page-content h2 {
                 font-size: 20px !important;
             }
-            .blog-content table {
+            .page-content table {
                 display: block;
                 width: 100%;
                 overflow-x: auto;
@@ -198,15 +168,14 @@
 </head>
 <body>
 <script>
-    if (localStorage.getItem('jatin-theme-pref') === 'dark') {
-        document.body.classList.add('dark-theme');
+    if (localStorage.getItem('jatin-theme-pref') === 'light') {
+        document.body.classList.add('light-theme');
     }
 </script>
 
 <div id="reading-progress"></div>
 
 
-<!-- NAVBAR -->
 <nav class="navbar" id="navbar">
     <div class="nav-container">
         <a class="nav-logo" href="../index.html#home">
@@ -217,7 +186,7 @@
             <a class="nav-link" href="../index.html#home">Home</a>
             <a class="nav-link" href="../index.html#about">About</a>
             <a class="nav-link" href="../index.html#experience">Experience</a>
-            <a class="nav-link" href="../index.html#projects">Projects</a>
+            <a class="nav-link " href="../index.html#projects">Projects</a>
             <a class="nav-link" href="../index.html#skills">Skills</a>
             <a class="nav-link active" href="../index.html#blog">Blog</a>
             <a class="nav-link" href="../index.html#contact">Contact</a>
@@ -409,14 +378,14 @@ can achieve better first-pass success rates and more optimal designs.</p>
         const moonIcon = '<i class="fas fa-moon"></i>';
         const sunIcon = '<i class="fas fa-sun"></i>';
         const updateButton = () => {
-            const isDark = document.body.classList.contains('dark-theme');
-            toggleBtn.innerHTML = isDark ? sunIcon : moonIcon;
+            const isLight = document.body.classList.contains('light-theme');
+            toggleBtn.innerHTML = isLight ? moonIcon : sunIcon;
         };
         updateButton();
         toggleBtn.addEventListener('click', () => {
-            document.body.classList.toggle('dark-theme');
-            const isDark = document.body.classList.contains('dark-theme');
-            localStorage.setItem('jatin-theme-pref', isDark ? 'dark' : 'light');
+            document.body.classList.toggle('light-theme');
+            const isLight = document.body.classList.contains('light-theme');
+            localStorage.setItem('jatin-theme-pref', isLight ? 'light' : 'dark');
             updateButton();
         });
     }
