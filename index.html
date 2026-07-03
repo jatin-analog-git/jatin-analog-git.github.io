@@ -2,21 +2,47 @@
 
 <html lang="en">
 <!--
-    ========================================================================
-    WELCOME TO YOUR WEBSITE!
-    ========================================================================
+    ================================================================================
+    GUIDE: HOW TO UPDATE YOUR WEBSITE CONTENT
+    ================================================================================
     
-    This file (index.html) allows you to edit the content of your website.
-    You don't need to be a coding expert to make changes.
+    Welcome to your personal portfolio codebase! 
+    Here are step-by-step instructions to change or add new content on your homepage:
     
-    HOW TO EDIT:
-    1. Look for comments like this one (gray text) that explain what a section does.
-    2. To CHANGE text: Just replace the white text between the tags. 
-       Example: <p> OLD TEXT </p>   becomes   <p> NEW TEXT </p>
-    3. To ADD items (like a new project): Copy the block correctly marked as "COPY THIS BLOCK" 
-       and paste it right after the previous one.
-    
-    Be careful not to delete the < and > tags!
+    1. GENERAL DETAILS (Name, Titles, SEO)
+       - Search for the tag `<title>` (around line 35) to change the name/title in the browser tab.
+       - Search for `<meta name="description"` (around line 25) to change the preview text shown on search engines.
+       - Search for `Jatin` and replace it with your own name.
+       - Update social profile links (LinkedIn, GitHub, Email) in the Hero section and Footer.
+       
+    2. HERO BIOGRAPHY
+       - Search for `class="hero-intro"` (around line 890).
+       - You can edit your professional summary, tags, and "View My Work" buttons here.
+       
+    3. ADDING A NEW WORK EXPERIENCE
+       - Scroll down to the `id="experience"` section (around line 1147).
+       - Locate the list of timeline items under the `id="work"` container.
+       - Copy an existing `<div class="timeline-item reveal">` block, paste it where you want the new job to appear,
+         and change the dates, company name, title, and bullet points.
+         
+    4. ADDING A FEATURED PROJECT
+       - Scroll to the `id="projects"` section (around line 1322).
+       - Each project has a `<div class="project-card lab-entry reveal" data-category="...">` block.
+       - Copy a card block, paste it under the projects grid, and edit the Title, Tags, and link href target.
+       - Use process-matching categories for `data-category`: "analog", "tools", or "research".
+       
+    5. UPDATING SKILLS & EXPERTISE
+       - Scroll to the `id="skills"` section (around line 1471).
+       - To edit layout layers or transistor-level structures, you can modify the SVG layers inside the workbench container.
+       - To add or modify skill tags, look for `<span class="tech-tag">` tags and adjust names.
+       
+    6. ADDING A NEW BLOG POST
+       - Scroll to the `id="blog"` section (around line 1619).
+       - Copy one of the `<article class="blog-card lab-entry reveal">` blocks.
+       - Paste it at the top of the blog grid, change the date, category badge, title, short description excerpt,
+         and the path of the link (`href="blog/my-new-post.html"`).
+         
+    * TIP: Always backup your files or use Git (`git status`, `git add`, `git commit`) so you can undo changes if anything breaks.
 -->
 <head>
 <meta charset="utf-8"/>
@@ -1172,7 +1198,12 @@
                 </button>
 </div>
 <div class="timeline-container">
-<!-- WORK TIMELINE -->
+<!-- WORK TIMELINE
+     HOW TO ADD A NEW JOB ROLE:
+     1. Copy the entire `<div class="timeline-item reveal">` block below.
+     2. Paste it right above the first `<div class="timeline-item reveal">` block (to keep it in reverse chronological order, latest first).
+     3. Update the company name, position title, duration date string, and list of bullet points.
+-->
 <div class="timeline active" id="work">
 <div class="timeline-item reveal">
 <div class="timeline-marker"></div>
@@ -1331,6 +1362,13 @@
 <button class="filter-btn" data-filter="tools">Tools</button>
 <button class="filter-btn" data-filter="research">Research</button>
 </div>
+<!-- PROJECTS GRID
+     HOW TO ADD A NEW PROJECT CARD:
+     1. Copy the entire `<div class="project-card lab-entry reveal" data-category="...">` block below.
+     2. Paste it in the list (ordered by preference).
+     3. Set `data-category` to "analog", "tools", or "research" (this determines the active toggle filter).
+     4. Update the placeholder icon, project title, tag list, and file link in `href="..."`.
+-->
 <div class="projects-grid stagger-reveal">
 <div class="project-card lab-entry reveal" data-category="analog">
 <div class="project-image">
@@ -1622,6 +1660,12 @@
 <span class="section-subtitle">Latest Posts</span>
 <h2 class="section-title">Blog &amp; Insights</h2>
 </div>
+<!-- BLOG GRID
+     HOW TO ADD A NEW BLOG POST CARD:
+     1. Copy the entire `<article class="blog-card lab-entry reveal">` block below.
+     2. Paste it at the top of this list (to show the newest posts first).
+     3. Update the date, category chip (e.g. "Tutorial", "Insights"), post title, summary description, and link target in `href="..."`.
+-->
 <div class="blog-grid stagger-reveal">
 <!-- --- BLOG CARD TEMPLATE --- -->
 <article class="blog-card lab-entry reveal">
