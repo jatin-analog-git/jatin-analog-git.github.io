@@ -90,6 +90,37 @@
         @media (max-width: 768px) {
             .workbench-layout {
                 flex-direction: column;
+                gap: 20px;
+                align-items: stretch;
+            }
+
+            .lsw-panel {
+                width: 100% !important;
+                max-width: 280px;
+                align-self: center;
+                margin-bottom: 10px;
+            }
+
+            .viewport-screen {
+                padding: 25px 15px 15px !important;
+            }
+
+            .process-stack {
+                gap: 20px !important;
+            }
+
+            .block-3d-adaptive {
+                width: 100% !important;
+            }
+
+            .face-top,
+            .face-side {
+                display: none !important;
+            }
+
+            .face-front {
+                border-top: 2px solid var(--layer-color) !important;
+                padding: 12px 15px !important;
             }
         }
 
@@ -562,6 +593,15 @@
 
         /* ── MOBILE RESPONSIVE: Hero Section ── */
         @media (max-width: 1024px) {
+            .hero {
+                height: auto !important;
+                min-height: 100vh !important;
+                max-height: none !important;
+                overflow: visible !important;
+                padding-top: 100px !important;
+                padding-bottom: 50px !important;
+            }
+
             #home .hero-content,
             #home .hero-wrapper {
                 flex-direction: column !important;

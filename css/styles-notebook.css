@@ -2313,7 +2313,9 @@ body.light-theme .hero-part-number {
         transform: none;
     }
     
-    .roadmap-node {
+    .roadmap-node,
+    .roadmap-node:nth-child(even),
+    .roadmap-node:nth-child(odd) {
         width: 100%;
         margin-left: 0 !important;
         text-align: left !important;
