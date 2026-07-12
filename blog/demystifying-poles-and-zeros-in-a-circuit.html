@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Demystifying Poles and Zeros in a circuit | Jatin</title>
-    <meta name="description" content="A comprehensive guide to understanding and analyzing the poles and zeros in electronic circuits.">
+    <meta name="description" content="A brief overview of the poles and zeros in electronic circuits.">
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -21,20 +21,20 @@
     <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <style>
         :root {
-            --paper:     #f2ede2;
-            --paper-2:   #ece6d7;
-            --paper-3:   #e4ddca;
-            --line:      #cdc5ae;
-            --line-soft: #ded6c0;
-            --ink:       #0f1620;
-            --ink-soft:  #3a4656;
-            --ink-dim:   #6a7485;
-            --ink-dimmer:#8f9aab;
-            --blue:      #0e2a4a;
-            --accent:    #b54a2b;
-            --green:     #2f6a3e;
-            --amber:     #8c6b1a;
-            --red:       #a8321e;
+            --paper:     #0e0e0e;
+            --paper-2:   #161616;
+            --paper-3:   #1e1e1e;
+            --line:      #2a2a2a;
+            --line-soft: #222222;
+            --ink:       #f7f2ea;
+            --ink-soft:  #c8c0b0;
+            --ink-dim:   #8a8278;
+            --ink-dimmer:#6a6258;
+            --blue:      #7ca8d4;
+            --accent:    #b8965a;
+            --green:     #5aad6a;
+            --amber:     #d4a574;
+            --red:       #d45a4a;
             --serif:     'Source Serif 4', Georgia, serif;
             --sans:      'Inter', system-ui, sans-serif;
             --mono:      'JetBrains Mono', ui-monospace, monospace;
@@ -217,10 +217,10 @@
     <header class="page-header">
         <div class="page-kicker">Tutorial</div>
         <h1 class="page-title">Demystifying Poles and Zeros in a circuit</h1>
-        <p class="page-subtitle">A step-by-step approach to analyzing the stability and frequency response of electronic circuits.</p>
+        <p class="page-subtitle">A brief overview of the poles and zeros in electronic circuits.</p>
         <div class="meta-row">
             <span class="meta-chip primary">Tutorial</span>
-            <span class="meta-chip"><i class="far fa-calendar" style="margin-right:5px;"></i>June 22, 2026</span>
+            <span class="meta-chip"><i class="far fa-calendar" style="margin-right:5px;"></i>June 12, 2026</span>
             <span class="meta-chip"><i class="far fa-clock" style="margin-right:5px;"></i>5 min read</span>
             <span class="meta-chip"><i class="far fa-user" style="margin-right:5px;"></i>Jatin</span>
         </div>
@@ -233,8 +233,7 @@
 frequency response and stability of electronic circuits. Understanding how to
 identify and analyze them is crucial for designing and optimizing any analog circuit.</p>
 
-<p>In this tutorial, we'll explore the fundamentals of poles and zeros and demonstrate how to
-apply them to real-world circuit design problems.</p>
+<p>In this tutorial, we'll explore the fundamentals of poles and zeros, their types and their effect on the transient response of the circuit.</p>
 
 <h2>What are Poles and Zeros?</h2>
 
@@ -242,83 +241,236 @@ apply them to real-world circuit design problems.</p>
 
 <div class="math-block">\[ H(s) = \frac{N(s)}{D(s)} \]</div>
 
-<p>where \(N(s)\) is the numerator polynomial and \(D(s)\) is the denominator polynomial. The poles and zeros are the roots of these polynomials.</p>
+<p>where \(H(s)\) is the transfer function from input to output, \(N(s)\) is the numerator polynomial and \(D(s)\) is the denominator polynomial.</p>
+
+<p>For example, in the following transfer function, the zero is at \(s = -1\) and the pole is at \(s = -2\)</p>
+
+<div class="math-block">\[ H(s) = \frac{s+1}{s+2} \]</div>
+
+<h2>Types of Poles and Zeros</h2>
+
+<p>Poles and Zeros can be classified into different types based on their location. These include:</p>
 
 <ul>
-    <li>Velocity saturation effects</li>
-    <li>Short-channel effects</li>
-    <li>Mobility degradation</li>
-    <li>Threshold voltage variations</li>
+    <li>Left Half Plane (LHP) poles and zeros</li>
+    <li>Right Half Plane (RHP) poles and zeros</li>
 </ul>
 
-<div class="insight-box"><strong>Key Insight:</strong> The gm/ID ratio provides a technology-independent
-    measure of transistor efficiency, ranging from strong inversion (~5 V⁻¹)
-    to weak inversion (~25 V⁻¹).</div>
+<h3>Left Half Plane (LHP) Poles</h3>
 
-<h2>The Fundamental Relationship</h2>
+<p>In the following transfer function the pole exists at \(s = -100\)</p>
 
-<p>The cornerstone of this methodology is the gm/ID ratio:</p>
+<div class="math-block">\[ H(s) = \frac{100}{s+100} \]</div>
 
-<div class="math-block">\[ \frac{g_m}{I_D} = \frac{2}{V_{GS} - V_{TH}} \quad \text{(strong inversion)} \]</div>
+<p>The magnitude and phase of \(H(s)\) can be easily found by plugging in \(s = j\omega\) in the transfer function.</p>
 
-<p>And in weak inversion:</p>
+<div class="math-block">\[ H(j\omega) = \frac{100}{j\omega+100} = \frac{100}{\sqrt{10000 + \omega^2}} e^{-j\tan^{-1}(\omega/100)} \]</div>
 
-<div class="math-block">\[ \frac{g_m}{I_D} = \frac{q}{nkT} \approx \frac{1}{n \cdot 26\text{mV}} \]</div>
+<p>As \(\omega\) increases, the magnitude decreases and the phase becomes more negative. Hence, a LHP pole always leads to reduction in magnitude and a negative phase. At \(\omega = 0\), the magnitude is \(0\text{ dB}\) and the phase is \(0^\circ\). As \(\omega\) approaches infinity, the magnitude approaches \(-\infty\text{ dB}\) and the phase approaches \(-90^\circ\). Exactly at \(\omega = 100\), the magnitude is \(-3\text{ dB}\) and the phase is \(-45^\circ\) as shown in the following figure.</p>
 
-<h2>Design Procedure</h2>
+<figure class="content-figure">
+    <img src="../images/blogs/mag_phase_plot_LHP.png" alt="(a) Pole Zero Plot, (b) Magnitude and phase plot for a LHP pole at \(s = -100\)." style="width: 100.0%; max-width: 100%;">
+    <figcaption>(a) Pole Zero Plot, (b) Magnitude and phase plot for a LHP pole at \(s = -100\).</figcaption>
+</figure>
 
-<p>The gm/ID design flow follows these steps:</p>
+<p>By taking the inverse Laplace transform, the time domain expression can be obtained as:</p>
 
-<h3>Step 1: Define Specifications</h3>
+<div class="math-block">\[ y(t) = 100e^{-100t} u(t) \]</div>
 
-<p>Start with your circuit requirements:</p>
+<p>where \(u(t)\) is the unit step function ensuring the response is zero for \(t < 0\). It can be visualized as follows:</p>
+
+<figure class="content-figure">
+    <img src="../images/blogs/time_domain_response_LHP.png" alt="Time domain response of a LHP pole at \(s = -100\)." style="width: 100.0%; max-width: 100%;">
+    <figcaption>Time domain response of a LHP pole at \(s = -100\).</figcaption>
+</figure>
+
+<p>The poles can also be complex in nature. Complex poles always appear in complex conjugate pairs of the form \(-a \pm jb\) in the transfer function. Why? For example the following transfer function has poles at \(s = -10 \pm j100\).</p>
+
+<div class="math-block">\[ H(s) = \frac{1}{(s - (-10+j100))(s - (-10-j100))} = \frac{1}{s^2 + 20s + 10100}\]</div>
+
+<p>The time domain response of the LHP complex poles is a decaying sinusoid as shown below.</p>
+
+<figure class="content-figure">
+    <img src="../images/blogs/time_domain_response_LHP_complex.png" alt="(a) Pole Zero Plot, (b) Time domain response of LHP complex poles at \(s = -10 \pm j100\) — a sinusoid at \(\omega = 100\) decaying inside the \(e^{-10t" style="width: 100.0%; max-width: 100%;">
+    <figcaption>(a) Pole Zero Plot, (b) Time domain response of LHP complex poles at \(s = -10 \pm j100\) — a sinusoid at \(\omega = 100\) decaying inside the \(e^{-10t</figcaption>
+</figure>
+
+<h3>Left Half Plane (LHP) Zeros</h3>
+
+<p>In the following transfer function the zero exists at \(s = -100\)</p>
+
+<div class="math-block">\[ H(s) = \frac{s+100}{100} \]</div>
+
+<p>The magnitude and phase of \(H(s)\) can be easily found by plugging in \(s = j\omega\) in the transfer function.</p>
+
+<div class="math-block">\[ H(j\omega) = \frac{j\omega+100}{100} = \frac{\sqrt{10000 + \omega^2}}{100} e^{j\tan^{-1}(\omega/100)} \]</div>
+
+<p>As \(\omega\) increases, the magnitude increases and the phase becomes more positive. Hence, a LHP zero always leads to increase in magnitude and a positive phase. At \(\omega = 0\), the magnitude is \(0\text{ dB}\) and the phase is \(0^\circ\). As \(\omega\) approaches infinity, the magnitude approaches \(+\infty\text{ dB}\) and the phase approaches \(+90^\circ\). Exactly at \(\omega = 100\), the magnitude is \(+3\text{ dB}\) and the phase is \(+45^\circ\) as shown in the following figure.</p>
+
+<figure class="content-figure">
+    <img src="../images/blogs/mag_phase_plot_LHZ.png" alt="(a) Pole Zero Plot, (b) Magnitude and phase plot for a LHP zero at \(s = -100\)." style="width: 100.0%; max-width: 100%;">
+    <figcaption>(a) Pole Zero Plot, (b) Magnitude and phase plot for a LHP zero at \(s = -100\).</figcaption>
+</figure>
+
+<p>To observe the zero in the time domain, it must be paired with a pole (no physical system can realize a zero by itself). Placing the pole a decade higher, at \(s = -1000\), keeps the zero's behavior dominant:</p>
+
+<div class="math-block">\[ H(s) = \frac{1 + s/100}{1 + s/1000} \]</div>
+
+<p>Applying a unit step to this system gives:</p>
+
+<div class="math-block">\[ y(t) = \left(1 + 9e^{-1000t}\right) u(t) \]</div>
+
+<p>The zero feeds a scaled derivative of the input directly to the output, so at \(t = 0\) the output instantly jumps to \(10\), in the same direction as the final value, and then settles to \(1\)</p>
+
+<figure class="content-figure">
+    <img src="../images/blogs/time_domain_response_LHZ.png" alt="Step response of a LHP zero at \(s = -100\) (with a pole at \(s = -1000\) for realizability). The zero kicks the output toward its final value." style="width: 100.0%; max-width: 100%;">
+    <figcaption>Step response of a LHP zero at \(s = -100\) (with a pole at \(s = -1000\) for realizability). The zero kicks the output toward its final value.</figcaption>
+</figure>
+
+<div class="insight-box"><strong>Key Insight:</strong> Providing a head start is the reason that LHP zeros are used to speed up amplifiers and compensate phase lag in feedback loops.</div>
+
+<h3>Right Half Plane (RHP) Poles</h3>
+
+<p>In the following transfer function the pole exists at \(s = +100\)</p>
+
+<div class="math-block">\[ H(s) = \frac{100}{s-100} \]</div>
+
+<p>The magnitude and phase of \(H(s)\) can be easily found by plugging in \(s = j\omega\) in the transfer function.</p>
+
+<div class="math-block">\[ H(j\omega) = \frac{100}{j\omega-100} = \frac{100}{\sqrt{10000 + \omega^2}} e^{-j(\pi - \tan^{-1}(\omega/100))} \]</div>
+
+<p>As \(\omega\) increases, the magnitude decreases (similar to a LHP pole) but the phase starts at \(-180^\circ\) instead of \(0^\circ\). At \(\omega = 0\), the magnitude is \(0\text{ dB}\) and the phase is \(-180^\circ\). As \(\omega\) approaches infinity, the magnitude approaches \(-\infty\text{ dB}\) and the phase approaches \(-90^\circ\). Exactly at \(\omega = 100\), the magnitude is \(-3\text{ dB}\) and the phase is \(-135^\circ\) as shown in the following figure.</p>
+
+<figure class="content-figure">
+    <img src="../images/blogs/mag_phase_plot_RHP.png" alt="(a) Pole Zero Plot, (b) Magnitude and phase plot for a RHP pole at \(s = +100\)." style="width: 100.0%; max-width: 100%;">
+    <figcaption>(a) Pole Zero Plot, (b) Magnitude and phase plot for a RHP pole at \(s = +100\).</figcaption>
+</figure>
+
+<p>By taking the inverse Laplace transform, the time domain expression can be obtained as:</p>
+
+<div class="math-block">\[ y(t) = 100e^{+100t} u(t) \]</div>
+
+<p>where \(u(t)\) is the unit step function ensuring the response is zero for \(t < 0\). Unlike a LHP pole, the response grows exponentially with time. It can be visualized as follows:</p>
+
+<figure class="content-figure">
+    <img src="../images/blogs/time_domain_response_RHP.png" alt="Time domain response of a RHP pole at \(s = +100\)." style="width: 100.0%; max-width: 100%;">
+    <figcaption>Time domain response of a RHP pole at \(s = +100\).</figcaption>
+</figure>
+
+<div class="insight-box"><strong>Key Insight:</strong> A RHP pole always makes a system unstable and leads to an 
+    unbounded response.</div>
+
+<p>The RHP poles can also be complex in nature. For example, a system with poles at \(s = 10 \pm j100\):</p>
+
+<div class="math-block">\[ H(s) = \frac{1}{(s - (10+j100))(s - (10-j100))} = \frac{1}{s^2 - 20s + 10100}\]</div>
+
+<p>The time domain response of RHP complex poles is a growing sinusoid as shown below.</p>
+
+<figure class="content-figure">
+    <img src="../images/blogs/time_domain_response_RHP_complex.png" alt="(a) Pole Zero Plot, (b) Time domain response of RHP complex poles at \(s = 10 \pm j100\) — a sinusoid at \(\omega = 100\) growing inside the \(e^{+10t" style="width: 100.0%; max-width: 100%;">
+    <figcaption>(a) Pole Zero Plot, (b) Time domain response of RHP complex poles at \(s = 10 \pm j100\) — a sinusoid at \(\omega = 100\) growing inside the \(e^{+10t</figcaption>
+</figure>
+
+<div class="insight-box"><strong>Key Insight:</strong> The RHP complex poles find application in oscillators where they amplify the noise in the circuit to generate oscillations.</div>
+
+<h3>Right Half Plane (RHP) Zeros</h3>
+
+<p>In the following transfer function the zero exists at \(s = +100\)</p>
+
+<div class="math-block">\[ H(s) = \frac{-s+100}{100} \]</div>
+
+<p>The magnitude and phase of \(H(s)\) can be easily found by plugging in \(s = j\omega\) in the transfer function.</p>
+
+<div class="math-block">\[ H(j\omega) = \frac{-j\omega+100}{100} = \frac{\sqrt{10000 + \omega^2}}{100} e^{-j\tan^{-1}(\omega/100)} \]</div>
+
+<p>For a RHP zero the magnitude increases with \(\omega\) but with a negative phase shift. At \(\omega = 0\), the magnitude is \(0\text{ dB}\) and the phase is \(0^\circ\). As \(\omega\) approaches infinity, the magnitude approaches \(+\infty\text{ dB}\) and the phase approaches \(-90^\circ\). Exactly at \(\omega = 100\), the magnitude is \(+3\text{ dB}\) and the phase is \(-45^\circ\) as shown in the following figure.</p>
+
+<figure class="content-figure">
+    <img src="../images/blogs/mag_phase_plot_RHZ.png" alt="(a) Pole Zero Plot, (b) Magnitude and phase plot for a RHP zero at \(s = +100\)." style="width: 100.0%; max-width: 100%;">
+    <figcaption>(a) Pole Zero Plot, (b) Magnitude and phase plot for a RHP zero at \(s = +100\).</figcaption>
+</figure>
+
+<div class="insight-box"><strong>Key Insight:</strong> The RHP zero is problematic in feedback systems because it provides magnitude boost (like a LHP zero) but phase lag (like a pole), reducing the phase margin and potentially destabilizing the loop.</div>
+
+<p>The same behavior can be seen in the time domain. As before, the zero is paired with a pole at \(s = -1000\) so it can be realized:</p>
+
+<div class="math-block">\[ H(s) = \frac{1 - s/100}{1 + s/1000} \]</div>
+
+<p>Applying a unit step gives:</p>
+
+<div class="math-block">\[ y(t) = \left(1 - 11e^{-1000t}\right) u(t) \]</div>
+
+<p>The derivative feedforward now arrives with a <em>minus</em> sign, so at \(t = 0\) the output first goes to \(-10\), in the wrong direction, and then recovers and settles at \(1\). This initial undershoot is called inverse response, and systems that show it are called non-minimum-phase systems</p>
+
+<figure class="content-figure">
+    <img src="../images/blogs/time_domain_response_RHZ.png" alt="Step response of a RHP zero at \(s = +100\) (with a pole at \(s = -1000\) for realizability). The output initially moves in the wrong direction." style="width: 100.0%; max-width: 100%;">
+    <figcaption>Step response of a RHP zero at \(s = +100\) (with a pole at \(s = -1000\) for realizability). The output initially moves in the wrong direction.</figcaption>
+</figure>
+
+<h2>Origin of Zeros</h2>
+
+<p>As described previously, a zero is a frequency at which the transfer function becomes zero. A system can generate zeros in the following two ways:</p>
 
 <ul>
-    <li>Required transconductance: \(g_m = 1 \text{ mS}\)</li>
-    <li>Available current: \(I_D = 100 \mu\text{A}\)</li>
-    <li>Minimum \(f_T\): 1 GHz</li>
+    <li>Two parallel paths with different speeds (phases)</li>
+    <li>A frequency dependent shunt path (bypass) to ground</li>
 </ul>
 
-<h3>Step 2: Calculate Target gm/ID</h3>
+<h3>Two parallel paths with different speeds</h3>
 
-<div class="math-block">\[ \frac{g_m}{I_D} = \frac{1 \text{ mS}}{100 \mu\text{A}} = 10 \text{ V}^{-1} \]</div>
+<p>Consider two parallel paths from input to output given by transfer functions \(H_1(s)\) and \(H_2(s)\):</p>
 
-<h3>Step 4: Size the Transistor</h3>
+<div class="math-block">\[ H_1(s) = \frac{\alpha}{s+a} \quad; \quad H_2(s) = \frac{\beta}{s+b} \]</div>
 
-<p>Using the normalized current density from lookup tables:</p>
+<p>The overall transfer function is given by:</p>
 
-<div class="math-block">\[ W = \frac{I_D}{I_D/W} = \frac{I_D}{\text{lookup}(g_m/I_D,\; I_D/W)} \]</div>
+<div class="math-block">\[ H(s) = H_1(s) + H_2(s) = \frac{\alpha}{s+a} + \frac{\beta}{s+b} = \frac{\alpha(s+b) + \beta(s+a)}{(s+a)(s+b)} = \frac{(\alpha+\beta)s + (\alpha b + \beta a)}{(s+a)(s+b)} \]</div>
 
-<h2>Practical Example: OTA Input Stage</h2>
+<p>This creates a zero at \(s = -(\alpha b + \beta a)/(\alpha + \beta)\).</p>
 
-<p>Let's design the input differential pair for an OTA:</p>
+<p>If \(\alpha\) and \(\beta\) have same sign, the zero naturally falls in the left half plane. If \(\alpha\) and \(\beta\) have opposite signs and either one of the following conditions is satisfied then the zero falls in the right half plane.</p>
 
-<table>
-<thead>
-    <tr><th>Parameter</th><th>Value</th></tr>
-</thead>
-<tbody>
-    <tr><td>Input transconductance</td><td>500 µS</td></tr>
-    <tr><td>Bias current per branch</td><td>50 µA</td></tr>
-    <tr><td>Minimum transit frequency</td><td>500 MHz</td></tr>
-</tbody>
-</table>
+<div class="math-block">\[ 1 < \left|\frac{\beta}{\alpha}\right| < \frac{b}{a} \quad \text{or} \quad \frac{b}{a} < \left|\frac{\beta}{\alpha}\right| < 1\]</div>
 
-<p>From these specifications, we get \(g_m/I_D = 10 \text{ V}^{-1}\), placing our design
-in moderate inversion — a good tradeoff between speed and power.</p>
+<p>The first condition is for the case when the opposite sign path has a lower DC gain but higher bandwidth. The second condition is for the case when the opposite sign path has a higher DC gain but lower bandwidth.</p>
 
-<div id="gmid-calc-root"></div>
+<p>Let us verify both cases with concrete numbers. First, two same-sign paths:</p>
 
-<h2>Conclusion</h2>
+<div class="math-block">\[ H_1(s) = \frac{100}{s+100} \quad ; \quad H_2(s) = \frac{100}{s+1000} \]</div>
 
-<p>The gm/ID methodology provides a systematic, technology-aware approach to analog
-design. By using characterized device data rather than simplified models, designers
-can achieve better first-pass success rates and more optimal designs.</p>
+<p>Here \(\alpha = \beta = 100\), \(a = 100\) and \(b = 1000\), which places a zero at \(s = -(\alpha b + \beta a)/(\alpha+\beta) = -550\) — a LHP zero. In the step response, both paths pull the output in the same direction, so the combined output simply rises faster than either path alone.</p>
 
-<blockquote>
-    "The gm/ID methodology bridges the gap between hand calculations and simulation,
-    enabling designers to make informed tradeoffs before committing to detailed design."
-</blockquote>
+<figure class="content-figure">
+    <img src="../images/blogs/parallel_paths_LHZ.png" alt="Same-sign parallel paths: step response of \(H_1\), \(H_2\) and the combined path. The zero at \(s = -550\) stays in the LHP and the output never reverses direction." style="width: 100.0%; max-width: 100%;">
+    <figcaption>Same-sign parallel paths: step response of \(H_1\), \(H_2\) and the combined path. The zero at \(s = -550\) stays in the LHP and the output never reverses direction.</figcaption>
+</figure>
+
+<div class="insight-box"><strong>Key Insight:</strong> A parallel RC network between input and output is the simplest example of a LHP zero creation.</div>
+
+<p>Next, consider the case where the second path has opposite sign and higher high-frequency gain:</p>
+
+<div class="math-block">\[ H_1(s) = \frac{100}{s+100} \quad ; \quad H_2(s) = \frac{-400}{s+1000} \]</div>
+
+<p>Here \(|\beta/\alpha| = 4\) and \(b/a = 10\), satisfying the first condition (\(1 < 4 < 10\)), so the zero lands at \(s = +200\) — in the RHP. Path 2 has a lower DC gain (\(0.4\) vs \(1\)) but is ten times faster. In the step response, the fast inverting path responds first and drags the output <em>negative</em>; the slow non-inverting path then takes over and pulls it up to the final value.</p>
+
+<figure class="content-figure">
+    <img src="../images/blogs/parallel_paths_RHZ.png" alt="Opposite-sign parallel paths: the fast inverting path wins at high frequency, creating a RHP zero at \(s = +200\) and undershoot in the step response." style="width: 100.0%; max-width: 100%;">
+    <figcaption>Opposite-sign parallel paths: the fast inverting path wins at high frequency, creating a RHP zero at \(s = +200\) and undershoot in the step response.</figcaption>
+</figure>
+
+<h3>Frequency-Dependent Shunt Path</h3>
+
+<p>The gain from input to output depends on the impedance between output and the ground node.</p>
+
+<div class="math-block">\[ H(s) = \frac{Z_L(s)}{Z_S(s) + Z_L(s)} \]</div>
+
+<p>where \(Z_L(s)\) is the load impedance and \(Z_S(s)\) is the source impedance. A zero is created when \(Z_L\) goes to zero at a certain frequency. For example, let a series RC circuit be placed as a load. The load impedance is given by:</p>
+
+<div class="math-block">\[ Z_L(s) = R + \frac{1}{sC} = \frac{1+sRC}{sC} \]</div>
+
+<p>\(Z_L(s)\) goes down to zero at \(s = -1/RC\) which creates a zero in the transfer function.</p>
+
+<div class="insight-box"><strong>Key Insight:</strong> A frequency dependent shunt path can create only LHP zeros. RHP zeros need a opposite-sign parallel path.</div>
     </div>
 
     <div class="author-section">
